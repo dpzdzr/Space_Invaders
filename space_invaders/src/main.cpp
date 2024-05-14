@@ -1,15 +1,11 @@
 #include "Game.h"
 
 int main()
-{
-    // Initilize random seed
-    srand(static_cast<unsigned>(time(0)));
-
-    //  Initialize game object
+{   
     Game game;
 
     // Game loop
-    while (game.running())
+    while (game.isRunning())
     {
         game.update();
         game.render();

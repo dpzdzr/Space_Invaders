@@ -1,28 +1,27 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Network.hpp>
+#include "SwagBall.h"
 
 class Player
 {
 private:
-    sf::RectangleShape shape;
+	sf::RectangleShape shape;
 
-    void initVariables();
-    void initShape();
+	float movementSpeed;
 
-    
+	void initVariables();
+	void initShape();
 
 public:
-    Player();
-    virtual ~Player();
+	Player(float x = 0.f, float y = 0.f);
+	~Player();
 
-    void update();
-    void render(sf::RenderTarget *target);
+	void updateInput();
+	void updateWindowBoundsCollision(const sf::RenderTarget* target);
+	void update(const sf::RenderTarget* target);
+	void render(sf::RenderTarget* target);
 };
 
 #endif
+

@@ -1,4 +1,4 @@
-#include "../inc/Game.h"
+#include "Game.h"
 
 // Private functions
 void Game::initVariables()
@@ -35,7 +35,7 @@ void Game::initEnemies()
 
 void Game::initFonts()
 {
-    font.loadFromFile("../Fonts/Dosis-Light.ttf");
+    font.loadFromFile("assets/Fonts/Dosis-Light.ttf");
 }
 
 void Game::initText()
