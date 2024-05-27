@@ -6,6 +6,7 @@ void Game::initVariables()
 	spawnTimerMax = 10.f;
 	spawnTimer = spawnTimerMax;
 	maxSwagBalls = 10;
+	points = 0;
 }
 
 void Game::initWindow()
@@ -15,11 +16,28 @@ void Game::initWindow()
 	window->setFramerateLimit(60);
 }
 
+void Game::initFont()
+{
+	if (!font.loadFromFile("Fonts/Dosis-Light.ttf"))
+	{
+		std::cout << "Could not load font!";
+	}
+}
+
+void Game::initText()
+{
+	guiText.setFont(font);
+	guiText.setFillColor(sf::Color::White);
+	guiText.setCharacterSize(32);
+}
+
 // Constructors and destructors
 Game::Game()
 {
 	initVariables();
 	initWindow();
+	initFont();
+	initText();
 }
 
 Game::~Game()
@@ -65,6 +83,28 @@ void Game::spawnSwagBalls()
 	}
 }
 
+void Game::updateCollision()
+{
+	// Check the collision
+	for (size_t i = 0; i < swagBalls.size(); i++)
+	{
+		if (player.getShape().getGlobalBounds().intersects(swagBalls[i].getShape().getGlobalBounds()))
+		{
+			swagBalls.erase(swagBalls.begin() + i);
+			++points;
+		}
+	}
+}
+
+void Game::updateGui()
+{
+	std::stringstream ss;
+
+	ss << "Points: " << points;
+
+	guiText.setString(ss.str());
+}
+
 void Game::update()
 {
 	pollEvents();
@@ -72,6 +112,13 @@ void Game::update()
 	spawnSwagBalls();
 
 	player.update(window);
+	updateCollision();
+	updateGui();
+}
+
+void Game::renderGui(sf::RenderTarget*target)
+{
+	target->draw(guiText);
 }
 
 void Game::render()
@@ -85,6 +132,8 @@ void Game::render()
 	{
 		i.render(*window);
 	}
+
+	renderGui(window);
 
 	window->display();
 }

@@ -2,7 +2,9 @@
 
 void Player::initVariables()
 {
-	movementSpeed = 10.f;
+	movementSpeed = 5.f;
+	hpMax = 10;
+	hp = hpMax;
 }
 
 void Player::initShape()
@@ -21,6 +23,11 @@ Player::Player(float x, float y)
 
 Player::~Player()
 {
+}
+
+const sf::RectangleShape &Player::getShape() const
+{
+	return shape;
 }
 
 void Player::updateInput()

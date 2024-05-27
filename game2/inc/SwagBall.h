@@ -1,6 +1,8 @@
 #ifndef SWAGBALL_H
 #define SWAGBALL_H
 
+#include <sstream>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
@@ -18,6 +20,8 @@ private:
 public:
 	SwagBall(const sf::RenderWindow & window);
 	~SwagBall();
+
+	const sf::CircleShape &getShape() const;
 
 	// Functions
 	void update();

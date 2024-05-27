@@ -22,6 +22,7 @@ target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics)
 target_compile_features(CMakeSFMLProject PRIVATE cxx_std_17)
 
 target_include_directories(CMakeSFMLProject PRIVATE ${CMAKE_SOURCE_DIR}/inc)
+file(COPY ${CMAKE_SOURCE_DIR}/Fonts DESTINATION ${CMAKE_BINARY_DIR}/bin)
 
 if(WIN32)
     add_custom_command(
