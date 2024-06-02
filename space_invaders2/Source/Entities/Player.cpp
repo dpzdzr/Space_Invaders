@@ -4,6 +4,7 @@
 void Player::initVariables()
 {
 	lastFireTime = 0.;
+	lives = 3;
 }
 
 void Player::initComponents()
@@ -22,6 +23,16 @@ Player::Player(float x, float y, sf::Texture &texture)
 
 Player::~Player()
 {
+}
+
+int Player::getLives()
+{
+	return lives;
+}
+
+void Player::takeDamage()
+{
+	--lives;
 }
 
 void Player::update(sf::RenderTarget *target, const float &dt)

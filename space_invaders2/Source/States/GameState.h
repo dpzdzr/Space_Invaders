@@ -1,14 +1,18 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
+#include <algorithm>
 #include "State.h"
 #include "Obstacle.h"
 #include "Alien.h"
 #include "Mysteryship.h"
+#include "PauseMenu.h"
 
 class GameState : public State
 {
 private:
+	PauseMenu pmenu;
+
 	Player *player;
 	Laser *laser;
 	sf::Texture backgroundTexture;
@@ -24,6 +28,7 @@ private:
 	void deleteInactiveLasers();
 	void initObstacles();
 	void checkForCollisions();
+	void gameOver();
 
 	// Aliens
 	constexpr static float alienLaserShootInterval = 0.35;
@@ -51,6 +56,7 @@ public:
 
 	// Functions
 	void updateInput(const float &dt);
+	void updatePlayerInput(const float &dt);
 	void update(const float &dt);
 	void render(sf::RenderTarget *target = nullptr);
 };

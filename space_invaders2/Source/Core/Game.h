@@ -28,6 +28,8 @@ private:
 	void initStates();
 	void initKeys();
 
+	
+
 public:
 	// Constructors and destructor
 	Game();

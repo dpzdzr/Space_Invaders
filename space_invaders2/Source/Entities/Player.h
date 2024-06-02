@@ -12,6 +12,7 @@ private:
 	void initVariables();
 	void initComponents();
 	double lastFireTime;
+	int lives;
 
 public:
 	Player(float x, float y, sf::Texture &texture);
@@ -19,6 +20,8 @@ public:
 	std::vector<Laser> lasers;
 	void FireLaser();
 	virtual ~Player();
+	int getLives();
+	void takeDamage();
 	void update(sf::RenderTarget *target, const float &dt);
 	void render(sf::RenderTarget *target = nullptr);
 };

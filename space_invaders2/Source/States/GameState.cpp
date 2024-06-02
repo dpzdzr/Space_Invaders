@@ -67,82 +67,68 @@ void GameState::initObstacles()
 
 void GameState::checkForCollisions()
 {
-	// // Player lasers
-	// for (auto &laser : player->lasers)
-	// {
-	// 	auto it = aliens.begin();
-	// 	while (it != aliens.end())
-	// 	{
-	// 		if ((*it)->getGlobalBounds().intersects(laser.getGlobalBounds()))
-	// 		{
-	// 			it = aliens.erase(it);
-	// 			laser.active = false;
-	// 		}
-	// 		else
-	// 		{
-	// 			++it;
-	// 		}
-	// 	}
-
-	// 	for (auto &obstacle : obstacles)
-	// 	{
-	// 		auto it = obstacle.blocks.begin();
-	// 		while (it != obstacle.blocks.end())
-	// 		{
-	// 			if (it->getGlobalBounds().intersects(laser.getGlobalBounds()))
-	// 			{
-	// 				it = obstacle.blocks.erase(it);
-	// 				laser.active = false;
-	// 			}
-	// 			else
-	// 			{
-	// 				++it;
-	// 			}
-	// 		}
-	// 	}
-
-	// 	if (mysteryShip->getGlobalBounds().intersects(laser.getGlobalBounds()))
-	// 	{
-	// 		mysteryShip->alive = false;
-	// 		laser.active = false;
-	// 	}
-	// }
-
-	// // Aliens lasers
-	// for (auto &laser : alienLasers)
-	// {
-	// 	if (player->getGlobalBounds().intersects(laser.getGlobalBounds()))
-	// 	{
-	// 		laser.active = false;
-	// 	}
-	// 	for (auto &obstacle : obstacles)
-	// 	{
-	// 		auto it = obstacle.blocks.begin();
-	// 		while (it != obstacle.blocks.end())
-	// 		{
-	// 			if (it->getGlobalBounds().intersects(laser.getGlobalBounds()))
-	// 			{
-	// 				it = obstacle.blocks.erase(it);
-	// 				laser.active = false;
-	// 			}
-	// 			else
-	// 			{
-	// 				++it;
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-	for (auto &alien : aliens)
+	// Player lasers
+	for (auto &laser : player->lasers)
 	{
+		auto it = aliens.begin();
+		while (it != aliens.end())
+		{
+			if ((*it)->getGlobalBounds().intersects(laser.getGlobalBounds()))
+			{
+				it = aliens.erase(it);
+				laser.active = false;
+			}
+			else
+			{
+				++it;
+			}
+		}
+
 		for (auto &obstacle : obstacles)
 		{
 			auto it = obstacle.blocks.begin();
 			while (it != obstacle.blocks.end())
 			{
-				if (it->getGlobalBounds().intersects((*alien).getGlobalBounds()))
+				if (it->getGlobalBounds().intersects(laser.getGlobalBounds()))
 				{
 					it = obstacle.blocks.erase(it);
+					laser.active = false;
+				}
+				else
+				{
+					++it;
+				}
+			}
+		}
+
+		if (mysteryShip->getGlobalBounds().intersects(laser.getGlobalBounds()))
+		{
+			mysteryShip->alive = false;
+			laser.active = false;
+		}
+	}
+
+	// Aliens lasers
+	for (auto &laser : alienLasers)
+	{
+		if (player->getGlobalBounds().intersects(laser.getGlobalBounds()))
+		{
+			laser.active = false;
+			player->takeDamage();
+			if (player->getLives() == 0)
+			{
+				gameOver();
+			}
+		}
+		for (auto &obstacle : obstacles)
+		{
+			auto it = obstacle.blocks.begin();
+			while (it != obstacle.blocks.end())
+			{
+				if (it->getGlobalBounds().intersects(laser.getGlobalBounds()))
+				{
+					it = obstacle.blocks.erase(it);
+					laser.active = false;
 				}
 				else
 				{
@@ -151,6 +137,37 @@ void GameState::checkForCollisions()
 			}
 		}
 	}
+
+	for (auto &alien : aliens)
+	{
+
+		// Collision with obstacles
+		// for (auto &obstacle : obstacles)
+		// {
+		// 	auto it = obstacle.blocks.begin();
+		// 	while (it != obstacle.blocks.end())
+		// 	{
+		// 		if (it->getGlobalBounds().intersects((*alien).getGlobalBounds()))
+		// 		{
+		// 			it = obstacle.blocks.erase(it);
+		// 		}
+		// 		else
+		// 		{
+		// 			++it;
+		// 		}
+		// 	}
+		// }
+
+		if (alien->getGlobalBounds().intersects(player->getGlobalBounds()))
+		{
+			gameOver();
+		}
+	}
+}
+
+void GameState::gameOver()
+{
+	std::cout << "Game over!";
 }
 
 void GameState::createAliens()
@@ -246,6 +263,7 @@ void GameState::updateAlienLasers(sf::RenderTarget *target)
 
 void GameState::deleteInactiveLasers()
 {
+	// Player lasers
 	for (auto it = player->lasers.begin(); it != player->lasers.end();)
 	{
 		if (!it->active)
@@ -254,6 +272,7 @@ void GameState::deleteInactiveLasers()
 			++it;
 	}
 
+	// Alien lasers
 	for (auto it = alienLasers.begin(); it != alienLasers.end();)
 	{
 		if (!it->active)
@@ -280,7 +299,7 @@ void GameState::spawnMysteryShipWithIntervals(const float &dt)
 }
 
 GameState::GameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states)
-	: State(window, supportedKeys, states)
+	: State(window, supportedKeys, states), pmenu(*window)
 {
 	std::srand(static_cast<unsigned>(std::time(nullptr)));
 	initVariables();
@@ -301,6 +320,17 @@ GameState::~GameState()
 }
 
 void GameState::updateInput(const float &dt)
+{
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("CLOSE"))))
+	{
+		if (!paused)
+			pauseState();
+		else
+			unpauseState();
+	}
+}
+
+void GameState::updatePlayerInput(const float &dt)
 {
 	// Update player input
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("MOVE_LEFT"))))
@@ -333,27 +363,31 @@ void GameState::updateInput(const float &dt)
 	// {
 	// 	player->move(dt, 0.f, 1.f);
 	// }
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("CLOSE"))))
-	{
-		endState();
-	}
 }
 
 void GameState::update(const float &dt)
 {
-	system("cls");
-	std::cout << dt << std::endl;
-	spawnMysteryShipWithIntervals(dt);
 	updateMousePositions();
 	updateInput(dt);
-	moveAliens(dt);
-	alienShootLaser(dt);
-	updateAlienLasers(window);
-	player->update(window, dt);
-	deleteInactiveLasers();
-	mysteryShip->update(window, dt);
-	checkForCollisions();
+	
+	if (!paused)
+	{
+		// system("cls");
+		// std::cout << dt << std::endl;
+		spawnMysteryShipWithIntervals(dt);
+		updatePlayerInput(dt);
+		moveAliens(dt);
+		alienShootLaser(dt);
+		updateAlienLasers(window);
+		player->update(window, dt);
+		deleteInactiveLasers();
+		mysteryShip->update(window, dt);
+		checkForCollisions();
+	}
+	else
+	{
+		pmenu.update();
+	}
 }
 
 void GameState::render(sf::RenderTarget *target)
@@ -381,4 +415,9 @@ void GameState::render(sf::RenderTarget *target)
 	mysteryShip->render(target);
 
 	player->render(target);
+
+	if (paused) // Pause menu render
+	{
+		pmenu.render(target);
+	}
 }
