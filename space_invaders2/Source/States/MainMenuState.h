@@ -12,7 +12,12 @@ private:
 	sf::RectangleShape background;
 	sf::Font font;
 
-	std::map<std::string, Button*> buttons;
+	std::map<std::string, Button *> buttons;
+
+	// Transition from Pause Menu to Main Menu
+	float inputDelayTimer;
+	const float inputDelayDuration = 1.f;
+	void updateInputDelay(const float &dt);
 
 	// Functions
 	void initVariables();
@@ -22,15 +27,15 @@ private:
 	void initButtons();
 
 public:
-	MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
+	MainMenuState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states);
 	virtual ~MainMenuState();
 
 	// Functions
-	void updateInput(const float& dt);
+	void updateInput(const float &dt);
 	void updateButtons();
-	void update(const float& dt);
-	void renderButtons(sf::RenderTarget* target = nullptr);
-	void render(sf::RenderTarget* target = nullptr);
+	void update(const float &dt);
+	void renderButtons(sf::RenderTarget *target = nullptr);
+	void render(sf::RenderTarget *target = nullptr);
 };
 
 #endif

@@ -1,8 +1,17 @@
 #include "MainMenuState.h"
 
+void MainMenuState::updateInputDelay(const float &dt)
+{
+	if (inputDelayTimer >= 0)
+	{
+		inputDelayTimer -= dt;
+	}
+}
+
 // Initilizer functions
 void MainMenuState::initVariables()
 {
+	inputDelayTimer = 0.f;
 }
 
 void MainMenuState::initBackground()
@@ -44,17 +53,30 @@ void MainMenuState::initKeybinds()
 
 void MainMenuState::initButtons()
 {
-	buttons["GAME_STATE"] = new Button(380, 200, 150, 50,
+	float windowWidth = window->getSize().x;
+	float windowHeight = window->getSize().y;
+
+	float buttonWidth = windowWidth * 0.2f;
+	float buttonHeight = windowHeight * 0.08f;
+
+	float buttonX = (windowWidth - buttonWidth) / 2.f;
+	float buttonY = windowHeight * 0.3f;
+	float spacesBetweenButtons = windowHeight * 0.1f;
+
+	buttons["GAME_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
 									   &font, "New Game",
 									   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+	buttonY += spacesBetweenButtons;
 
-	buttons["SETTINGS"] = new Button(380, 280, 150, 50,
+	buttons["SETTINGS"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
 									 &font, "Settings",
 									 sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+	buttonY += spacesBetweenButtons;
 
-	buttons["EXIT_STATE"] = new Button(380, 360, 150, 50,
+	buttons["EXIT_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
 									   &font, "Quit",
-									   sf::Color(100, 100, 100, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+									   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+	buttonY += spacesBetweenButtons;
 }
 
 MainMenuState::MainMenuState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states)
@@ -90,6 +112,7 @@ void MainMenuState::updateButtons()
 	// New game
 	if (buttons["GAME_STATE"]->isPressed())
 	{
+		inputDelayTimer = inputDelayDuration;
 		states->push(new GameState(window, supportedKeys, states));
 	}
 
@@ -102,8 +125,11 @@ void MainMenuState::updateButtons()
 
 void MainMenuState::update(const float &dt)
 {
+	updateInputDelay(dt);
 	updateMousePositions();
 	updateInput(dt);
+	if (inputDelayTimer > 0)
+		return;
 	updateButtons();
 }
 

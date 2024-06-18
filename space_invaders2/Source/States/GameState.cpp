@@ -37,6 +37,14 @@ void GameState::initKeybinds()
 	ifs.close();
 }
 
+void GameState::initFonts()
+{
+	if (!font.loadFromFile(RESOURCES "Fonts/Dosis-Light.ttf"))
+	{
+		throw("ERROR::MAINMENUSTATES::COULT NOT LOAD FILE");
+	}
+}
+
 void GameState::initTextures()
 {
 	textures["PLAYER_IDLE"].loadFromFile(RESOURCES "Images/Sprites/Player/test.png");
@@ -44,6 +52,13 @@ void GameState::initTextures()
 	textures["ALIEN_2"].loadFromFile(RESOURCES "Images/Sprites/Aliens/alien_2.png");
 	textures["ALIEN_3"].loadFromFile(RESOURCES "Images/Sprites/Aliens/alien_3.png");
 	textures["MYSTERY"].loadFromFile(RESOURCES "Images/Sprites/Aliens/mystery.png");
+}
+
+void GameState::initPauseMenu()
+{
+	pmenu = new PauseMenu(*window, font);
+	pmenu->addButton("RESUME", 150.f, "Resume");
+	pmenu->addButton("QUIT", 250.f, "Quit");
 }
 
 void GameState::initPlayers()
@@ -168,6 +183,18 @@ void GameState::checkForCollisions()
 void GameState::gameOver()
 {
 	std::cout << "Game over!";
+}
+
+void GameState::updatePauseMenuButtons()
+{
+	if (this->pmenu->isButtonPressed("RESUME"))
+	{
+		unpauseState();
+	}
+	if (this->pmenu->isButtonPressed("QUIT"))
+	{
+		endState();
+	}
 }
 
 void GameState::createAliens()
@@ -299,13 +326,15 @@ void GameState::spawnMysteryShipWithIntervals(const float &dt)
 }
 
 GameState::GameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states)
-	: State(window, supportedKeys, states), pmenu(*window)
+	: State(window, supportedKeys, states)
 {
 	std::srand(static_cast<unsigned>(std::time(nullptr)));
 	initVariables();
 	initBackground();
+	initFonts();
 	initKeybinds();
 	initTextures();
+	initPauseMenu();
 	initPlayers();
 	initObstacles();
 	createAliens();
@@ -316,12 +345,13 @@ GameState::~GameState()
 {
 	delete player;
 	delete mysteryShip;
+	delete pmenu;
 	deleteAliens();
 }
 
 void GameState::updateInput(const float &dt)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("CLOSE"))))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("CLOSE")))  && getKeytime())
 	{
 		if (!paused)
 			pauseState();
@@ -368,8 +398,9 @@ void GameState::updatePlayerInput(const float &dt)
 void GameState::update(const float &dt)
 {
 	updateMousePositions();
+	updateKeytime(dt);
 	updateInput(dt);
-	
+
 	if (!paused)
 	{
 		// system("cls");
@@ -386,7 +417,8 @@ void GameState::update(const float &dt)
 	}
 	else
 	{
-		pmenu.update();
+		pmenu->update(mousePosView);
+		updatePauseMenuButtons();
 	}
 }
 
@@ -418,6 +450,6 @@ void GameState::render(sf::RenderTarget *target)
 
 	if (paused) // Pause menu render
 	{
-		pmenu.render(target);
+		pmenu->render(target);
 	}
 }

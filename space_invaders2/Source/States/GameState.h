@@ -11,7 +11,8 @@
 class GameState : public State
 {
 private:
-	PauseMenu pmenu;
+	sf::Font font;
+	PauseMenu* pmenu;
 
 	Player *player;
 	Laser *laser;
@@ -22,13 +23,16 @@ private:
 	// Functions
 	void initVariables();
 	void initBackground();
+	void initFonts();
 	void initKeybinds();
 	void initTextures();
+	void initPauseMenu();
 	void initPlayers();
 	void deleteInactiveLasers();
 	void initObstacles();
 	void checkForCollisions();
 	void gameOver();
+	void updatePauseMenuButtons();
 
 	// Aliens
 	constexpr static float alienLaserShootInterval = 0.35;

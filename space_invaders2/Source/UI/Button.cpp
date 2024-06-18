@@ -1,8 +1,8 @@
 #include "Button.h"
 
 Button::Button(float x, float y, float width, float height,
-	sf::Font* font, std::string text,
-	sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor)
+			   sf::Font *font, std::string text,
+			   sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor)
 {
 	buttonStates = BTN_IDLE;
 
@@ -12,11 +12,13 @@ Button::Button(float x, float y, float width, float height,
 	this->text.setFont(*this->font);
 	this->text.setString(text);
 	this->text.setFillColor(sf::Color::White);
-	this->text.setCharacterSize(20);
+	float textSize = height * 0.4f;
+	this->text.setCharacterSize(static_cast<unsigned int>(textSize));
 
 	this->idleColor = idleColor;
 	this->hoverColor = hoverColor;
 	this->activeColor = activeColor;
+
 	this->text.setPosition(sf::Vector2f(
 		shape.getPosition().x + shape.getGlobalBounds().width / 2.f - this->text.getGlobalBounds().width / 2.f,
 		shape.getPosition().y + shape.getGlobalBounds().height / 2.f - this->text.getGlobalBounds().height / 2.f));
@@ -37,18 +39,17 @@ const bool Button::isPressed() const
 }
 
 // Functions
-void Button::update(sf::Vector2f mousePos)
+void Button::update(const sf::Vector2f &mousePos)
 {
 	/*Update the booleans for hover and pressed*/
 
 	// Idle
 	buttonStates = BTN_IDLE;
-
+	
 	// Hover
 	if (shape.getGlobalBounds().contains(mousePos))
 	{
 		buttonStates = BTN_HOVER;
-
 		// Pressed
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
@@ -73,7 +74,7 @@ void Button::update(sf::Vector2f mousePos)
 	}
 }
 
-void Button::render(sf::RenderTarget* target)
+void Button::render(sf::RenderTarget *target)
 {
 	target->draw(shape);
 	target->draw(text);
