@@ -34,3 +34,18 @@ int Alien::getType()
 {
     return type;
 }
+
+int Alien::getPoints()
+{
+    switch(type)
+    {
+        case 1:
+            return 100;
+        case 2:
+            return 200;
+        case 3:
+            return 300;
+        default:
+            return 0;
+    }
+}

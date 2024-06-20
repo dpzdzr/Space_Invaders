@@ -20,5 +20,6 @@ public:
     void spawn(sf::RenderTarget *target);
     void update(sf::RenderTarget *target, const float &dt);
     void render(sf::RenderTarget *target);
+    void reset();
 };
 #endif

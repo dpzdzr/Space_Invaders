@@ -14,6 +14,10 @@ void GameState::resetGame()
 	aliens.clear();
 	alienLasers.clear();
 	player->resetPlayer();
+	mysteryShip->reset();
+	livesText.setString("Lives: " + std::to_string(player->getLives()));
+	score = 0;
+	formatScoreText();
 }
 
 void GameState::initVariables()
@@ -24,6 +28,8 @@ void GameState::initVariables()
 	mysterShipSpawnInterval = rand() % 10 + 11;
 	run = true;
 	gameOverFlag = false;
+	alienLaserSpeed = 3;
+	score = 0;
 }
 
 void GameState::initBackground()
@@ -57,7 +63,7 @@ void GameState::initKeybinds()
 
 void GameState::initFonts()
 {
-	if (!font.loadFromFile(RESOURCES "Fonts/ARCADECLASSIC.TTF"))
+	if (!font.loadFromFile(RESOURCES "Fonts/Pixelon.ttf"))
 	{
 		throw("ERROR::MAINMENUSTATES::COULT NOT LOAD FILE");
 	}
@@ -76,7 +82,8 @@ void GameState::initPauseMenu()
 {
 	pauseMenu = new InGameMenu(*window, font, "PAUSED");
 	pauseMenu->addButton("RESUME", 150.f, "Resume");
-	pauseMenu->addButton("QUIT", 250.f, "Quit");
+	pauseMenu->addButton("RESTART", 250.f, "Restart");
+	pauseMenu->addButton("QUIT", 350.f, "Quit");
 }
 
 void GameState::initGameOverMenu()
@@ -89,7 +96,7 @@ void GameState::initGameOverMenu()
 void GameState::initPlayers()
 {
 	int positionX = (window->getSize().x - textures["PLAYER_IDLE"].getSize().x) / 2.f;
-	int positionY = window->getSize().y - textures["PLAYER_IDLE"].getSize().y;
+	int positionY = window->getSize().y - textures["PLAYER_IDLE"].getSize().y - 10.f;
 	player = new Player(positionX, positionY, textures["PLAYER_IDLE"]);
 }
 
@@ -115,6 +122,8 @@ void GameState::checkForCollisions()
 		{
 			if ((*it)->getGlobalBounds().intersects(laser.getGlobalBounds()))
 			{
+				score += (*it)->getPoints();
+
 				it = aliens.erase(it);
 				laser.active = false;
 			}
@@ -145,6 +154,7 @@ void GameState::checkForCollisions()
 		{
 			mysteryShip->alive = false;
 			laser.active = false;
+			score += 500;
 		}
 	}
 
@@ -155,6 +165,7 @@ void GameState::checkForCollisions()
 		{
 			laser.active = false;
 			player->takeDamage();
+			livesText.setString("Lives: " + std::to_string(player->getLives()));
 			if (player->getLives() == 0)
 			{
 				gameOver();
@@ -182,21 +193,21 @@ void GameState::checkForCollisions()
 	{
 
 		// Collision with obstacles
-		// for (auto &obstacle : obstacles)
-		// {
-		// 	auto it = obstacle.blocks.begin();
-		// 	while (it != obstacle.blocks.end())
-		// 	{
-		// 		if (it->getGlobalBounds().intersects((*alien).getGlobalBounds()))
-		// 		{
-		// 			it = obstacle.blocks.erase(it);
-		// 		}
-		// 		else
-		// 		{
-		// 			++it;
-		// 		}
-		// 	}
-		// }
+		for (auto &obstacle : obstacles)
+		{
+			auto it = obstacle.blocks.begin();
+			while (it != obstacle.blocks.end())
+			{
+				if (it->getGlobalBounds().intersects((*alien).getGlobalBounds()))
+				{
+					it = obstacle.blocks.erase(it);
+				}
+				else
+				{
+					++it;
+				}
+			}
+		}
 
 		if (alien->getGlobalBounds().intersects(player->getGlobalBounds()))
 		{
@@ -217,9 +228,15 @@ void GameState::updatePauseMenuButtons()
 	{
 		unpauseState();
 	}
-	if (pauseMenu->isButtonPressed("QUIT"))
+	else if (pauseMenu->isButtonPressed("QUIT"))
 	{
 		endState();
+	}
+	else if (pauseMenu->isButtonPressed("RESTART"))
+	{
+		resetGame();
+		reinitGame();
+		unpauseState();
 	}
 }
 
@@ -230,10 +247,33 @@ void GameState::updateGameOverMenuButtons()
 		resetGame();
 		reinitGame();
 	}
-	if (gameOverMenu->isButtonPressed("QUIT"))
+	else if (gameOverMenu->isButtonPressed("QUIT"))
 	{
 		endState();
 	}
+}
+
+void GameState::initTexts()
+{
+	livesText.setFont(font);
+	livesText.setCharacterSize(30);
+	livesText.setFillColor(sf::Color::White);
+	livesText.setPosition(15.f, 15.f);
+	livesText.setString("Lives: " + std::to_string(player->getLives()));
+
+	scoreText.setFont(font);
+	scoreText.setCharacterSize(30);
+	scoreText.setFillColor(sf::Color::White);
+	scoreText.setPosition(window->getSize().x - 200.f, 15.f);
+	formatScoreText();
+}
+
+void GameState::formatScoreText()
+{
+	std::string scoreString = "Score: ";
+	int leadingZeros = 5 - std::to_string(score).length();
+	scoreString += std::string(leadingZeros, '0') + std::to_string(score);
+	scoreText.setString(scoreString);
 }
 
 void GameState::createAliens()
@@ -314,7 +354,7 @@ void GameState::alienShootLaser(const float &dt)
 		Alien &alien = *aliens[randomIndex];
 		float posX = alien.getPosition().x + alien.getGlobalBounds().width / 2;
 		float posY = alien.getPosition().y + alien.getGlobalBounds().height;
-		alienLasers.push_back(Laser({posX, posY}, 5));
+		alienLasers.push_back(Laser({posX, posY}, alienLaserSpeed));
 		timeLastAlienFired = 0.f;
 	}
 }
@@ -377,9 +417,9 @@ GameState::GameState(sf::RenderWindow *window, std::map<std::string, int> *suppo
 	initGameOverMenu();
 	initMysteryShip();
 	initPlayers();
-
 	initObstacles();
 	createAliens();
+	initTexts();
 }
 
 GameState::~GameState()
@@ -459,6 +499,7 @@ void GameState::update(const float &dt)
 			deleteInactiveLasers();
 			mysteryShip->update(window, dt);
 			checkForCollisions();
+			formatScoreText();
 		}
 
 		if (paused)
@@ -499,6 +540,9 @@ void GameState::render(sf::RenderTarget *target)
 	mysteryShip->render(target);
 
 	player->render(target);
+
+	target->draw(livesText);
+	target->draw(scoreText);
 
 	if (paused) // Pause menu render
 	{

@@ -10,7 +10,7 @@ InGameMenu::InGameMenu(sf::RenderWindow &window, sf::Font &font, std::string tex
 
     // Init container
     container.setSize(sf::Vector2f(
-        static_cast<float>(window.getSize().x) / 4.f,
+        static_cast<float>(window.getSize().x) * 0.3f ,
         static_cast<float>(window.getSize().y) - 60.f));
     container.setFillColor(sf::Color(20, 20, 20, 200));
     container.setPosition(

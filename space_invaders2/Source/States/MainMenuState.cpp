@@ -56,7 +56,7 @@ void MainMenuState::initButtons()
 	float windowWidth = window->getSize().x;
 	float windowHeight = window->getSize().y;
 
-	float buttonWidth = windowWidth * 0.2f;
+	float buttonWidth = windowWidth * 0.3f;
 	float buttonHeight = windowHeight * 0.08f;
 
 	float buttonX = (windowWidth - buttonWidth) / 2.f;
@@ -65,6 +65,11 @@ void MainMenuState::initButtons()
 
 	buttons["GAME_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
 									   &font, "New Game",
+									   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+	buttonY += spacesBetweenButtons;
+
+	buttons["HIGH_SCORE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
+									   &font, "High Score",
 									   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 	buttonY += spacesBetweenButtons;
 
@@ -88,13 +93,13 @@ void MainMenuState::initMusic()
 MainMenuState::MainMenuState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states)
 	: State(window, supportedKeys, states)
 {
+	initMusic();
 	initVariables();
 	initBackground();
 	initFonts();
 	initTitleText();
 	initKeybinds();
 	initButtons();
-	initMusic();
 }
 
 MainMenuState::~MainMenuState()

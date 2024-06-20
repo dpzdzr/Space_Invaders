@@ -22,6 +22,11 @@ private:
 	std::vector<Obstacle> obstacles;
 	bool run;
 	bool gameOverFlag;
+	int score;
+
+	//Texts
+	sf::Text livesText;
+	sf::Text scoreText;
 
 	// Functions
 	void reinitGame();
@@ -40,8 +45,12 @@ private:
 	void gameOver();
 	void updatePauseMenuButtons();
 	void updateGameOverMenuButtons();
+	void initTexts();
+	void updateScoreText();
+	void formatScoreText();
 
 	// Aliens
+	int alienLaserSpeed;
 	constexpr static float alienLaserShootInterval = 0.2;
 	float timeLastAlienFired;
 	int aliensDirection;

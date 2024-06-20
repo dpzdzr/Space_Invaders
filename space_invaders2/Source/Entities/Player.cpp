@@ -4,12 +4,12 @@
 void Player::initVariables()
 {
 	lastFireTime = 0.;
-	lives = 1;
+	lives = 3;
 }
 
 void Player::initComponents()
 {
-	createMovementComponent(200.f);
+	createMovementComponent(150.f);
 }
 
 // Constructors / Destructors
@@ -65,7 +65,7 @@ void Player::FireLaser()
 {
 	if (lastFireTime >= 1.f)
 	{
-		lasers.push_back(Laser({sprite.getPosition().x + sprite.getGlobalBounds().height / 2, sprite.getPosition().y}, -5));
+		lasers.push_back(Laser({sprite.getPosition().x + sprite.getGlobalBounds().height / 2, sprite.getPosition().y}, -3));
 		lastFireTime = 0.f;
 	}
 }

@@ -16,6 +16,7 @@ public:
     void update(sf::RenderTarget *target, const float &dt);
     void render(sf::RenderTarget *target);
     int getType();
+    int getPoints();
 };
 
 #endif

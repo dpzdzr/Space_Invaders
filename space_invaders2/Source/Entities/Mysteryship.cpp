@@ -64,6 +64,10 @@ void MysteryShip::render(sf::RenderTarget *target)
         target->draw(sprite);
 }
 
+void MysteryShip::reset()
+{
+    alive = false;
+}
 sf::Vector2f MysteryShip::getPosition()
 {
     return sprite.getPosition();
