@@ -6,11 +6,10 @@
 class State
 {
 private:
-
 protected:
-	std::stack<State*>* states;
-	sf::RenderWindow* window;
-	std::map<std::string, int>* supportedKeys;
+	std::stack<State *> *states;
+	sf::RenderWindow *window;
+	std::map<std::string, int> *supportedKeys;
 	std::map<std::string, int> keybinds;
 	bool quit;
 	bool paused;
@@ -28,11 +27,11 @@ protected:
 	virtual void initKeybinds() = 0;
 
 public:
-	State(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
+	State(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states);
 	virtual ~State();
-	
+
 	// Accessors
-	const bool& getQuit() const;
+	const bool &getQuit() const;
 	const bool getKeytime();
 
 	// Functions
@@ -41,10 +40,10 @@ public:
 	void unpauseState();
 
 	virtual void updateMousePositions();
-	virtual void updateKeytime(const float& dt);
-	virtual void updateInput(const float& dt) = 0;
-	virtual void update(const float& dt) = 0;
-	virtual void render(sf::RenderTarget* target = nullptr) = 0;
+	virtual void updateKeytime(const float &dt);
+	virtual void updateInput(const float &dt) = 0;
+	virtual void update(const float &dt) = 0;
+	virtual void render(sf::RenderTarget *target = nullptr) = 0;
 };
 
 #endif

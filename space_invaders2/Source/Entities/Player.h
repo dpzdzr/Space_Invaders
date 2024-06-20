@@ -13,11 +13,13 @@ private:
 	void initComponents();
 	double lastFireTime;
 	int lives;
+	sf::Vector2f startingPosition;
 
 public:
 	Player(float x, float y, sf::Texture &texture);
 
 	std::vector<Laser> lasers;
+	void resetPlayer();
 	void FireLaser();
 	virtual ~Player();
 	int getLives();

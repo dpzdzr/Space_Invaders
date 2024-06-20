@@ -12,8 +12,8 @@ class GameState : public State
 {
 private:
 	sf::Font font;
-	InGameMenu* pauseMenu;
-	InGameMenu* gameOverMenu;
+	InGameMenu *pauseMenu;
+	InGameMenu *gameOverMenu;
 
 	Player *player;
 	Laser *laser;
@@ -24,6 +24,8 @@ private:
 	bool gameOverFlag;
 
 	// Functions
+	void reinitGame();
+	void resetGame();
 	void initVariables();
 	void initBackground();
 	void initFonts();

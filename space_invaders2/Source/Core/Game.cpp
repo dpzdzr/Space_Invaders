@@ -9,7 +9,7 @@ void Game::initVariables()
 
 void Game::initWindow()
 {
-	std::ifstream ifs(RESOURCES"Config/window.ini");
+	std::ifstream ifs(RESOURCES "Config/window.ini");
 	videoModes = sf::VideoMode::getFullscreenModes();
 
 	std::string title = "None";
@@ -42,7 +42,7 @@ void Game::initWindow()
 
 void Game::initKeys()
 {
-	std::ifstream ifs(RESOURCES"Config/supported_keys.ini");
+	std::ifstream ifs(RESOURCES "Config/supported_keys.ini");
 	if (ifs.is_open())
 	{
 		std::string key = "";
@@ -55,7 +55,6 @@ void Game::initKeys()
 	}
 	ifs.close();
 }
-
 
 void Game::initStates()
 {

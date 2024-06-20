@@ -44,7 +44,7 @@ std::map<std::string, Button *> &InGameMenu::getButtons()
 
 const bool InGameMenu::isButtonPressed(const std::string key)
 {
-    return buttons[key]->isPressed();
+    return buttons[key]->isClicked();
 }
 
 void InGameMenu::addButton(const std::string key, float y, const std::string text)

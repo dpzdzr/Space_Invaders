@@ -4,28 +4,28 @@
 #include "GameState.h"
 #include "Button.h"
 #include "SettingsState.h"
+#include "MusicResource.h"
 
 class MainMenuState : public State
 {
 private:
 	// Variables
 	sf::Texture backgroundTexture;
+	sf::Text titleText;
 	sf::RectangleShape background;
 	sf::Font font;
+	MusicResource *musicResource;
 
 	std::map<std::string, Button *> buttons;
-
-	// Transition from Pause Menu to Main Menu
-	float inputDelayTimer;
-	const float inputDelayDuration = 0.5f;
-	void updateInputDelay(const float &dt);
 
 	// Functions
 	void initVariables();
 	void initBackground();
 	void initFonts();
+	void initTitleText();
 	void initKeybinds();
 	void initButtons();
+	void initMusic();
 
 public:
 	MainMenuState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states);

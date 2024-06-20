@@ -5,7 +5,7 @@ Button::Button(float x, float y, float width, float height,
 			   sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor)
 {
 	buttonStates = BTN_IDLE;
-
+	previousState = BTN_IDLE;
 	shape.setPosition(sf::Vector2f(x, y));
 	shape.setSize(sf::Vector2f(width, height));
 	this->font = font;
@@ -31,9 +31,9 @@ Button::~Button()
 }
 
 // Accessors
-const bool Button::isPressed() const
+const bool Button::isClicked() const
 {
-	if (buttonStates == BTN_PRESSED)
+	if (buttonStates == BTN_CLICKED)
 		return true;
 	return false;
 }
@@ -45,17 +45,23 @@ void Button::update(const sf::Vector2f &mousePos)
 
 	// Idle
 	buttonStates = BTN_IDLE;
-	
+
 	// Hover
 	if (shape.getGlobalBounds().contains(mousePos))
 	{
 		buttonStates = BTN_HOVER;
-		// Pressed
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	
+		if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && previousState == BTN_PRESSED)
+		{
+			buttonStates = BTN_CLICKED;
+		}
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			buttonStates = BTN_PRESSED;
 		}
 	}
+
+	previousState = buttonStates;
 
 	switch (buttonStates)
 	{
@@ -66,6 +72,7 @@ void Button::update(const sf::Vector2f &mousePos)
 		shape.setFillColor(hoverColor);
 		break;
 	case BTN_PRESSED:
+	case BTN_CLICKED:
 		shape.setFillColor(activeColor);
 		break;
 	default:
@@ -78,4 +85,12 @@ void Button::render(sf::RenderTarget *target)
 {
 	target->draw(shape);
 	target->draw(text);
+}
+
+void Button::changeText(std::string text)
+{
+	this->text.setString(text);
+	this->text.setPosition(sf::Vector2f(
+		shape.getPosition().x + shape.getGlobalBounds().width / 2.f - this->text.getGlobalBounds().width / 2.f,
+		shape.getPosition().y + shape.getGlobalBounds().height / 2.f - this->text.getGlobalBounds().height / 2.f - 5.f));
 }

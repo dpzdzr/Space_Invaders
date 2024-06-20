@@ -3,6 +3,7 @@
 
 #include "State.h"
 #include "Button.h"
+#include "MusicResource.h"
 
 class SettingsState : public State
 {
@@ -11,23 +12,23 @@ private:
     sf::Texture backgroundTexture;
     sf::RectangleShape background;
     sf::Font font;
+    sf::Text titleText;
+
+    // Music
+    MusicResource *musicResource;
 
     std::map<std::string, Button *> buttons;
-
-    // Transition from Pause Menu to Main Menu
-    float inputDelayTimer;
-    const float inputDelayDuration = 0.5f;
-    void updateInputDelay(const float &dt);
 
     // Functions
     void initVariables();
     void initBackground();
     void initFonts();
+    void initTitleText();
     void initKeybinds();
     void initButtons();
 
 public:
-    SettingsState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states);
+    SettingsState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, MusicResource *musicResource);
     virtual ~SettingsState();
     // Accessors
 

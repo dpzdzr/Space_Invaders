@@ -4,7 +4,7 @@
 void Player::initVariables()
 {
 	lastFireTime = 0.;
-	lives = 3;
+	lives = 1;
 }
 
 void Player::initComponents()
@@ -14,11 +14,12 @@ void Player::initComponents()
 
 // Constructors / Destructors
 Player::Player(float x, float y, sf::Texture &texture)
+	: startingPosition(x, y)
 {
 	initVariables();
 	initComponents();
 	setTexture(texture);
-	setPosition(x, y);
+	setPosition(startingPosition.x, startingPosition.y);
 }
 
 Player::~Player()
@@ -52,6 +53,12 @@ void Player::render(sf::RenderTarget *target)
 	{
 		laser.render(target);
 	}
+}
+
+void Player::resetPlayer()
+{
+	initVariables();
+	setPosition(startingPosition.x, startingPosition.y);
 }
 
 void Player::FireLaser()

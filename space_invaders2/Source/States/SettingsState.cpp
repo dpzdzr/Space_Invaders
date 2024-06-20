@@ -1,23 +1,14 @@
 #include "SettingsState.h"
 
-void SettingsState::updateInputDelay(const float &dt)
-{
-    if (inputDelayTimer >= 0)
-    {
-        inputDelayTimer -= dt;
-    }
-}
-
 void SettingsState::initVariables()
 {
-    inputDelayTimer = 0.f;
 }
 
 void SettingsState::initBackground()
 {
     background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
 
-    if (!backgroundTexture.loadFromFile(RESOURCES "Images/Backgrounds/menu_bg.png"))
+    if (!backgroundTexture.loadFromFile(RESOURCES "Images/Backgrounds/tlo.png"))
     {
         throw "ERORR::MAINMENU::TEXTURE";
     }
@@ -27,10 +18,19 @@ void SettingsState::initBackground()
 
 void SettingsState::initFonts()
 {
-    if (!font.loadFromFile(RESOURCES "Fonts/Dosis-Light.ttf"))
+    if (!font.loadFromFile(RESOURCES "Fonts/Pixelon.TTF"))
     {
         throw("ERROR::SettingsStateS::COULT NOT LOAD FILE");
     }
+}
+
+void SettingsState::initTitleText()
+{
+    titleText.setFont(font);
+    titleText.setString("Options");
+    titleText.setCharacterSize(70);
+    titleText.setFillColor(sf::Color::White);
+    titleText.setPosition(window->getSize().x / 2.f - titleText.getGlobalBounds().width / 2.f, window->getSize().y * 0.08f);
 }
 
 void SettingsState::initKeybinds()
@@ -62,18 +62,25 @@ void SettingsState::initButtons()
     float buttonY = windowHeight * 0.3f;
     float spacesBetweenButtons = windowHeight * 0.1f;
 
+    buttons["MUSIC_STATUS"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
+                                         &font, !musicResource->getMusicStatus() ? "Music: on" : "Music: off",
+                                         sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+    buttonY += spacesBetweenButtons;
+
     buttons["EXIT_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
                                        &font, "Quit",
                                        sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
     buttonY += spacesBetweenButtons;
 }
 
-SettingsState::SettingsState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states)
+SettingsState::SettingsState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, MusicResource *musicResource)
     : State(window, supportedKeys, states)
 {
+    this->musicResource = musicResource;
     initVariables();
     initBackground();
     initFonts();
+    initTitleText();
     initKeybinds();
     initButtons();
 }
@@ -101,12 +108,22 @@ void SettingsState::updateButtons()
         it.second->update(mousePosView);
     }
 
-    if (inputDelayTimer <= 0)
+    // Quit game
+    if (buttons["EXIT_STATE"]->isClicked())
     {
-        // Quit game
-        if (buttons["EXIT_STATE"]->isPressed())
+        endState();
+    }
+    if (buttons["MUSIC_STATUS"]->isClicked())
+    {
+        if (musicResource->getMusicStatus() == true)
         {
-            endState();
+            buttons["MUSIC_STATUS"]->changeText("Music: on");
+            musicResource->playMusic();
+        }
+        else
+        {
+            buttons["MUSIC_STATUS"]->changeText("Music: off");
+            musicResource->stopMusic();
         }
     }
 }
@@ -114,7 +131,6 @@ void SettingsState::updateButtons()
 void SettingsState::update(const float &dt)
 {
     updateMousePositions();
-    updateInputDelay(dt);
     updateInput(dt);
     updateButtons();
 }
@@ -133,7 +149,7 @@ void SettingsState::render(sf::RenderTarget *target)
         target = window;
 
     target->draw(background);
-
+    target->draw(titleText);
     renderButtons(target);
 
     // Remove later
@@ -144,6 +160,5 @@ void SettingsState::render(sf::RenderTarget *target)
     std::stringstream ss;
     ss << mousePosView.x << ' ' << mousePosView.y;
     mouseText.setString(ss.str());
-
     target->draw(mouseText);
 }

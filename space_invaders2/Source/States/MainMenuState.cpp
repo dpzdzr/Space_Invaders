@@ -1,24 +1,15 @@
 #include "MainMenuState.h"
 
-void MainMenuState::updateInputDelay(const float &dt)
-{
-	if (inputDelayTimer >= 0)
-	{
-		inputDelayTimer -= dt;
-	}
-}
-
 // Initilizer functions
 void MainMenuState::initVariables()
 {
-	inputDelayTimer = 0.f;
 }
 
 void MainMenuState::initBackground()
 {
 	background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
 
-	if (!backgroundTexture.loadFromFile(RESOURCES "Images/Backgrounds/Sprite-0002.png"))
+	if (!backgroundTexture.loadFromFile(RESOURCES "Images/Backgrounds/tlo.png"))
 	{
 		throw "ERORR::MAINMENU::TEXTURE";
 	}
@@ -28,10 +19,19 @@ void MainMenuState::initBackground()
 
 void MainMenuState::initFonts()
 {
-	if (!font.loadFromFile(RESOURCES "Fonts/ARCADECLASSIC.TTF"))
+	if (!font.loadFromFile(RESOURCES "Fonts/Pixelon.ttf"))
 	{
 		throw("ERROR::MAINMENUSTATES::COULT NOT LOAD FILE");
 	}
+}
+
+void MainMenuState::initTitleText()
+{
+	titleText.setFont(font);
+	titleText.setString("Space Invaders");
+	titleText.setCharacterSize(75);
+	titleText.setFillColor(sf::Color::White);
+	titleText.setPosition(window->getSize().x / 2.f - titleText.getGlobalBounds().width / 2.f, window->getSize().y * 0.08f);
 }
 
 void MainMenuState::initKeybinds()
@@ -79,14 +79,22 @@ void MainMenuState::initButtons()
 	buttonY += spacesBetweenButtons;
 }
 
+void MainMenuState::initMusic()
+{
+	musicResource = new MusicResource();
+	musicResource->playMusic();
+}
+
 MainMenuState::MainMenuState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states)
 	: State(window, supportedKeys, states)
 {
 	initVariables();
 	initBackground();
 	initFonts();
+	initTitleText();
 	initKeybinds();
 	initButtons();
+	initMusic();
 }
 
 MainMenuState::~MainMenuState()
@@ -95,6 +103,8 @@ MainMenuState::~MainMenuState()
 	{
 		delete it->second;
 	}
+
+	delete musicResource;
 }
 
 void MainMenuState::updateInput(const float &dt)
@@ -109,33 +119,27 @@ void MainMenuState::updateButtons()
 		it.second->update(mousePosView);
 	}
 
-	if (inputDelayTimer <= 0)
+	// New game
+	if (buttons["GAME_STATE"]->isClicked())
 	{
-		// New game
-		if (buttons["GAME_STATE"]->isPressed())
-		{
-			inputDelayTimer = inputDelayDuration;
-			states->push(new GameState(window, supportedKeys, states));
-		}
+		states->push(new GameState(window, supportedKeys, states));
+	}
 
-		if (buttons["SETTINGS_STATE"]->isPressed())
-		{
-			inputDelayTimer = inputDelayDuration;
-			states->push(new SettingsState(window, supportedKeys, states));
-		}
+	if (buttons["SETTINGS_STATE"]->isClicked())
+	{
+		states->push(new SettingsState(window, supportedKeys, states, musicResource));
+	}
 
-		// Quit game
-		if (buttons["EXIT_STATE"]->isPressed())
-		{
-			endState();
-		}
+	// Quit game
+	if (buttons["EXIT_STATE"]->isClicked())
+	{
+		endState();
 	}
 }
 
 void MainMenuState::update(const float &dt)
 {
 	updateMousePositions();
-	updateInputDelay(dt);
 	updateInput(dt);
 	updateButtons();
 }
@@ -154,6 +158,7 @@ void MainMenuState::render(sf::RenderTarget *target)
 		target = window;
 
 	target->draw(background);
+	target->draw(titleText);
 
 	renderButtons(target);
 
@@ -165,6 +170,5 @@ void MainMenuState::render(sf::RenderTarget *target)
 	std::stringstream ss;
 	ss << mousePosView.x << ' ' << mousePosView.y;
 	mouseText.setString(ss.str());
-
 	target->draw(mouseText);
 }

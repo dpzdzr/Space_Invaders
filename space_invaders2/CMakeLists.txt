@@ -15,6 +15,7 @@ file(GLOB_RECURSE MY_SOURCES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/Source/*.cpp)
 
 add_executable(space_invaders ${MY_SOURCES})
 target_link_libraries(space_invaders PRIVATE sfml-graphics)
+target_link_libraries(space_invaders PRIVATE sfml-audio)
 target_compile_features(space_invaders PRIVATE cxx_std_17)
 
 target_include_directories(space_invaders PRIVATE

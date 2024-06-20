@@ -1,5 +1,21 @@
 #include "GameState.h"
 
+void GameState::reinitGame()
+{
+	initVariables();
+	initObstacles();
+	createAliens();
+}
+
+void GameState::resetGame()
+{
+	obstacles.clear();
+	deleteAliens();
+	aliens.clear();
+	alienLasers.clear();
+	player->resetPlayer();
+}
+
 void GameState::initVariables()
 {
 	aliensDirection = 1;
@@ -211,7 +227,8 @@ void GameState::updateGameOverMenuButtons()
 {
 	if (gameOverMenu->isButtonPressed("RETRY"))
 	{
-		unpauseState();
+		resetGame();
+		reinitGame();
 	}
 	if (gameOverMenu->isButtonPressed("QUIT"))
 	{
@@ -358,10 +375,11 @@ GameState::GameState(sf::RenderWindow *window, std::map<std::string, int> *suppo
 	initTextures();
 	initPauseMenu();
 	initGameOverMenu();
+	initMysteryShip();
 	initPlayers();
+
 	initObstacles();
 	createAliens();
-	initMysteryShip();
 }
 
 GameState::~GameState()
@@ -375,13 +393,14 @@ GameState::~GameState()
 
 void GameState::updateInput(const float &dt)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("CLOSE"))) && getKeytime())
-	{
-		if (!paused)
-			pauseState();
-		else
-			unpauseState();
-	}
+	if (!gameOverFlag)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("CLOSE"))) && getKeytime())
+		{
+			if (!paused)
+				pauseState();
+			else
+				unpauseState();
+		}
 }
 
 void GameState::updatePlayerInput(const float &dt)
@@ -441,13 +460,13 @@ void GameState::update(const float &dt)
 			mysteryShip->update(window, dt);
 			checkForCollisions();
 		}
-		
-		if(paused)
+
+		if (paused)
 		{
 			pauseMenu->update(mousePosView);
 			updatePauseMenuButtons();
 		}
-		if(gameOverFlag)
+		if (gameOverFlag)
 		{
 			gameOverMenu->update(mousePosView);
 			updateGameOverMenuButtons();
@@ -485,8 +504,17 @@ void GameState::render(sf::RenderTarget *target)
 	{
 		pauseMenu->render(target);
 	}
-	if(gameOverFlag)
+	if (gameOverFlag)
 	{
 		gameOverMenu->render(target);
 	}
+
+	sf::Text mouseText;
+	mouseText.setPosition(mousePosView.x, mousePosView.y - 20);
+	mouseText.setFont(font);
+	mouseText.setCharacterSize(12);
+	std::stringstream ss;
+	ss << mousePosView.x << ' ' << mousePosView.y;
+	mouseText.setString(ss.str());
+	target->draw(mouseText);
 }
