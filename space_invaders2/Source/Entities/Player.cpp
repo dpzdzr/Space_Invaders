@@ -9,7 +9,7 @@ void Player::initVariables()
 
 void Player::initComponents()
 {
-	createMovementComponent(500.f);
+	createMovementComponent(200.f);
 }
 
 // Constructors / Destructors
@@ -45,7 +45,7 @@ void Player::update(sf::RenderTarget *target, const float &dt)
 }
 
 void Player::render(sf::RenderTarget *target)
-{	
+{
 	target->draw(sprite);
 
 	for (auto &laser : lasers)
@@ -56,7 +56,7 @@ void Player::render(sf::RenderTarget *target)
 
 void Player::FireLaser()
 {
-	if (lastFireTime >= 0.35f)
+	if (lastFireTime >= 1.f)
 	{
 		lasers.push_back(Laser({sprite.getPosition().x + sprite.getGlobalBounds().height / 2, sprite.getPosition().y}, -5));
 		lastFireTime = 0.f;

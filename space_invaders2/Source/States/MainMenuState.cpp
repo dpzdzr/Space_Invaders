@@ -18,7 +18,7 @@ void MainMenuState::initBackground()
 {
 	background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
 
-	if (!backgroundTexture.loadFromFile(RESOURCES "Images/Backgrounds/menu_bg.png"))
+	if (!backgroundTexture.loadFromFile(RESOURCES "Images/Backgrounds/Sprite-0002.png"))
 	{
 		throw "ERORR::MAINMENU::TEXTURE";
 	}
@@ -28,7 +28,7 @@ void MainMenuState::initBackground()
 
 void MainMenuState::initFonts()
 {
-	if (!font.loadFromFile(RESOURCES "Fonts/Dosis-Light.ttf"))
+	if (!font.loadFromFile(RESOURCES "Fonts/ARCADECLASSIC.TTF"))
 	{
 		throw("ERROR::MAINMENUSTATES::COULT NOT LOAD FILE");
 	}
@@ -68,9 +68,9 @@ void MainMenuState::initButtons()
 									   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 	buttonY += spacesBetweenButtons;
 
-	buttons["SETTINGS"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
-									 &font, "Settings",
-									 sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+	buttons["SETTINGS_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
+										   &font, "Settings",
+										   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 	buttonY += spacesBetweenButtons;
 
 	buttons["EXIT_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
@@ -109,27 +109,34 @@ void MainMenuState::updateButtons()
 		it.second->update(mousePosView);
 	}
 
-	// New game
-	if (buttons["GAME_STATE"]->isPressed())
+	if (inputDelayTimer <= 0)
 	{
-		inputDelayTimer = inputDelayDuration;
-		states->push(new GameState(window, supportedKeys, states));
-	}
+		// New game
+		if (buttons["GAME_STATE"]->isPressed())
+		{
+			inputDelayTimer = inputDelayDuration;
+			states->push(new GameState(window, supportedKeys, states));
+		}
 
-	// Quit game
-	if (buttons["EXIT_STATE"]->isPressed())
-	{
-		endState();
+		if (buttons["SETTINGS_STATE"]->isPressed())
+		{
+			inputDelayTimer = inputDelayDuration;
+			states->push(new SettingsState(window, supportedKeys, states));
+		}
+
+		// Quit game
+		if (buttons["EXIT_STATE"]->isPressed())
+		{
+			endState();
+		}
 	}
 }
 
 void MainMenuState::update(const float &dt)
 {
-	updateInputDelay(dt);
 	updateMousePositions();
+	updateInputDelay(dt);
 	updateInput(dt);
-	if (inputDelayTimer > 0)
-		return;
 	updateButtons();
 }
 

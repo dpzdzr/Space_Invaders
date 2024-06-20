@@ -3,6 +3,7 @@
 
 #include "GameState.h"
 #include "Button.h"
+#include "SettingsState.h"
 
 class MainMenuState : public State
 {
@@ -16,7 +17,7 @@ private:
 
 	// Transition from Pause Menu to Main Menu
 	float inputDelayTimer;
-	const float inputDelayDuration = 1.f;
+	const float inputDelayDuration = 0.5f;
 	void updateInputDelay(const float &dt);
 
 	// Functions

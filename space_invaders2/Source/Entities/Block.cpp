@@ -8,7 +8,8 @@ void Block::initVariables()
 Block::Block(sf::Vector2f position)
 {
     initVariables();
-    shape.setFillColor(sf::Color(243, 216, 63, 255));
+    //shape.setFillColor(sf::Color(243, 216, 63, 255));
+    shape.setFillColor(sf::Color(206, 45, 69, 255));
     shape.setPosition(position);
     shape.setSize(size);
 }

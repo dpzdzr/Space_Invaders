@@ -21,7 +21,7 @@ Button::Button(float x, float y, float width, float height,
 
 	this->text.setPosition(sf::Vector2f(
 		shape.getPosition().x + shape.getGlobalBounds().width / 2.f - this->text.getGlobalBounds().width / 2.f,
-		shape.getPosition().y + shape.getGlobalBounds().height / 2.f - this->text.getGlobalBounds().height / 2.f));
+		shape.getPosition().y + shape.getGlobalBounds().height / 2.f - this->text.getGlobalBounds().height / 2.f - 5.f));
 
 	shape.setFillColor(this->idleColor);
 }

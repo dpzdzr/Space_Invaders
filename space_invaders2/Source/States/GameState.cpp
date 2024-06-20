@@ -6,13 +6,15 @@ void GameState::initVariables()
 	timeLastAlienFired = 0.f;
 	timeLastSpawn = 0.f;
 	mysterShipSpawnInterval = rand() % 10 + 11;
+	run = true;
+	gameOverFlag = false;
 }
 
 void GameState::initBackground()
 {
 	background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
 
-	if (!backgroundTexture.loadFromFile(RESOURCES "Images/Backgrounds/game_bg.png"))
+	if (!backgroundTexture.loadFromFile(RESOURCES "Images/Backgrounds/tlo.png"))
 	{
 		throw "ERORR::MAINMENU::TEXTURE";
 	}
@@ -39,7 +41,7 @@ void GameState::initKeybinds()
 
 void GameState::initFonts()
 {
-	if (!font.loadFromFile(RESOURCES "Fonts/Dosis-Light.ttf"))
+	if (!font.loadFromFile(RESOURCES "Fonts/ARCADECLASSIC.TTF"))
 	{
 		throw("ERROR::MAINMENUSTATES::COULT NOT LOAD FILE");
 	}
@@ -56,9 +58,16 @@ void GameState::initTextures()
 
 void GameState::initPauseMenu()
 {
-	pmenu = new PauseMenu(*window, font);
-	pmenu->addButton("RESUME", 150.f, "Resume");
-	pmenu->addButton("QUIT", 250.f, "Quit");
+	pauseMenu = new InGameMenu(*window, font, "PAUSED");
+	pauseMenu->addButton("RESUME", 150.f, "Resume");
+	pauseMenu->addButton("QUIT", 250.f, "Quit");
+}
+
+void GameState::initGameOverMenu()
+{
+	gameOverMenu = new InGameMenu(*window, font, "GAME OVER");
+	gameOverMenu->addButton("RETRY", 150.f, "Retry");
+	gameOverMenu->addButton("QUIT", 250.f, "Quit");
 }
 
 void GameState::initPlayers()
@@ -182,16 +191,29 @@ void GameState::checkForCollisions()
 
 void GameState::gameOver()
 {
-	std::cout << "Game over!";
+	std::cout << "Game over!\n";
+	gameOverFlag = true;
 }
 
 void GameState::updatePauseMenuButtons()
 {
-	if (this->pmenu->isButtonPressed("RESUME"))
+	if (pauseMenu->isButtonPressed("RESUME"))
 	{
 		unpauseState();
 	}
-	if (this->pmenu->isButtonPressed("QUIT"))
+	if (pauseMenu->isButtonPressed("QUIT"))
+	{
+		endState();
+	}
+}
+
+void GameState::updateGameOverMenuButtons()
+{
+	if (gameOverMenu->isButtonPressed("RETRY"))
+	{
+		unpauseState();
+	}
+	if (gameOverMenu->isButtonPressed("QUIT"))
 	{
 		endState();
 	}
@@ -335,6 +357,7 @@ GameState::GameState(sf::RenderWindow *window, std::map<std::string, int> *suppo
 	initKeybinds();
 	initTextures();
 	initPauseMenu();
+	initGameOverMenu();
 	initPlayers();
 	initObstacles();
 	createAliens();
@@ -345,13 +368,14 @@ GameState::~GameState()
 {
 	delete player;
 	delete mysteryShip;
-	delete pmenu;
+	delete pauseMenu;
+	delete gameOverMenu;
 	deleteAliens();
 }
 
 void GameState::updateInput(const float &dt)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("CLOSE")))  && getKeytime())
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("CLOSE"))) && getKeytime())
 	{
 		if (!paused)
 			pauseState();
@@ -397,28 +421,37 @@ void GameState::updatePlayerInput(const float &dt)
 
 void GameState::update(const float &dt)
 {
-	updateMousePositions();
-	updateKeytime(dt);
-	updateInput(dt);
+	if (run)
+	{
+		updateMousePositions();
+		updateKeytime(dt);
+		updateInput(dt);
 
-	if (!paused)
-	{
-		// system("cls");
-		// std::cout << dt << std::endl;
-		spawnMysteryShipWithIntervals(dt);
-		updatePlayerInput(dt);
-		moveAliens(dt);
-		alienShootLaser(dt);
-		updateAlienLasers(window);
-		player->update(window, dt);
-		deleteInactiveLasers();
-		mysteryShip->update(window, dt);
-		checkForCollisions();
-	}
-	else
-	{
-		pmenu->update(mousePosView);
-		updatePauseMenuButtons();
+		if (!paused && !gameOverFlag)
+		{
+			// system("cls");
+			// std::cout << dt << std::endl;
+			spawnMysteryShipWithIntervals(dt);
+			updatePlayerInput(dt);
+			moveAliens(dt);
+			alienShootLaser(dt);
+			updateAlienLasers(window);
+			player->update(window, dt);
+			deleteInactiveLasers();
+			mysteryShip->update(window, dt);
+			checkForCollisions();
+		}
+		
+		if(paused)
+		{
+			pauseMenu->update(mousePosView);
+			updatePauseMenuButtons();
+		}
+		if(gameOverFlag)
+		{
+			gameOverMenu->update(mousePosView);
+			updateGameOverMenuButtons();
+		}
 	}
 }
 
@@ -450,6 +483,10 @@ void GameState::render(sf::RenderTarget *target)
 
 	if (paused) // Pause menu render
 	{
-		pmenu->render(target);
+		pauseMenu->render(target);
+	}
+	if(gameOverFlag)
+	{
+		gameOverMenu->render(target);
 	}
 }

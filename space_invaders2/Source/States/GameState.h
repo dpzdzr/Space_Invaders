@@ -6,19 +6,22 @@
 #include "Obstacle.h"
 #include "Alien.h"
 #include "Mysteryship.h"
-#include "PauseMenu.h"
+#include "InGameMenu.h"
 
 class GameState : public State
 {
 private:
 	sf::Font font;
-	PauseMenu* pmenu;
+	InGameMenu* pauseMenu;
+	InGameMenu* gameOverMenu;
 
 	Player *player;
 	Laser *laser;
 	sf::Texture backgroundTexture;
 	sf::RectangleShape background;
 	std::vector<Obstacle> obstacles;
+	bool run;
+	bool gameOverFlag;
 
 	// Functions
 	void initVariables();
@@ -27,15 +30,17 @@ private:
 	void initKeybinds();
 	void initTextures();
 	void initPauseMenu();
+	void initGameOverMenu();
 	void initPlayers();
 	void deleteInactiveLasers();
 	void initObstacles();
 	void checkForCollisions();
 	void gameOver();
 	void updatePauseMenuButtons();
+	void updateGameOverMenuButtons();
 
 	// Aliens
-	constexpr static float alienLaserShootInterval = 0.35;
+	constexpr static float alienLaserShootInterval = 0.2;
 	float timeLastAlienFired;
 	int aliensDirection;
 	std::vector<Alien *> aliens;
