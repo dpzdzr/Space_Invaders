@@ -193,21 +193,21 @@ void GameState::checkForCollisions()
 	{
 
 		// Collision with obstacles
-		for (auto &obstacle : obstacles)
-		{
-			auto it = obstacle.blocks.begin();
-			while (it != obstacle.blocks.end())
-			{
-				if (it->getGlobalBounds().intersects((*alien).getGlobalBounds()))
-				{
-					it = obstacle.blocks.erase(it);
-				}
-				else
-				{
-					++it;
-				}
-			}
-		}
+		// for (auto &obstacle : obstacles)
+		// {
+		// 	auto it = obstacle.blocks.begin();
+		// 	while (it != obstacle.blocks.end())
+		// 	{
+		// 		if (it->getGlobalBounds().intersects((*alien).getGlobalBounds()))
+		// 		{
+		// 			it = obstacle.blocks.erase(it);
+		// 		}
+		// 		else
+		// 		{
+		// 			++it;
+		// 		}
+		// 	}
+		// }
 
 		if (alien->getGlobalBounds().intersects(player->getGlobalBounds()))
 		{

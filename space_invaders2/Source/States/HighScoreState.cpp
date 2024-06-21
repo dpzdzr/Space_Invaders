@@ -1,11 +1,11 @@
-#include "MainMenuState.h"
+#include "HighScoreState.h"
 
 // Initilizer functions
-void MainMenuState::initVariables()
+void HighScoreState::initVariables()
 {
 }
 
-void MainMenuState::initBackground()
+void HighScoreState::initBackground()
 {
 	background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
 
@@ -17,7 +17,7 @@ void MainMenuState::initBackground()
 	background.setTexture(&backgroundTexture);
 }
 
-void MainMenuState::initFonts()
+void HighScoreState::initFonts()
 {
 	if (!font.loadFromFile(RESOURCES "Fonts/Pixelon.ttf"))
 	{
@@ -25,16 +25,16 @@ void MainMenuState::initFonts()
 	}
 }
 
-void MainMenuState::initTitleText()
+void HighScoreState::initTitleText()
 {
 	titleText.setFont(font);
-	titleText.setString("Space Invaders");
+	titleText.setString("High Score");
 	titleText.setCharacterSize(75);
 	titleText.setFillColor(sf::Color::White);
 	titleText.setPosition(window->getSize().x / 2.f - titleText.getGlobalBounds().width / 2.f, window->getSize().y * 0.08f);
 }
 
-void MainMenuState::initKeybinds()
+void HighScoreState::initKeybinds()
 {
 	std::ifstream ifs(RESOURCES "Config/mainmenustates_keybinds.ini");
 
@@ -51,7 +51,7 @@ void MainMenuState::initKeybinds()
 	ifs.close();
 }
 
-void MainMenuState::initButtons()
+void HighScoreState::initButtons()
 {
 	float windowWidth = window->getSize().x;
 	float windowHeight = window->getSize().y;
@@ -63,37 +63,15 @@ void MainMenuState::initButtons()
 	float buttonY = windowHeight * 0.3f;
 	float spacesBetweenButtons = windowHeight * 0.1f;
 
-	buttons["GAME_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
-									   &font, "New Game",
-									   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
-	buttonY += spacesBetweenButtons;
-
-	buttons["HIGH_SCORE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
-									   &font, "High Score",
-									   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
-	buttonY += spacesBetweenButtons;
-
-	buttons["SETTINGS_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
-										   &font, "Settings",
-										   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
-	buttonY += spacesBetweenButtons;
-
 	buttons["EXIT_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
 									   &font, "Quit",
 									   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 	buttonY += spacesBetweenButtons;
 }
 
-void MainMenuState::initMusic()
-{
-	musicResource = new MusicResource();
-	musicResource->playMusic();
-}
-
-MainMenuState::MainMenuState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states)
+HighScoreState::HighScoreState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states)
 	: State(window, supportedKeys, states)
 {
-	initMusic();
 	initVariables();
 	initBackground();
 	initFonts();
@@ -102,42 +80,24 @@ MainMenuState::MainMenuState(sf::RenderWindow *window, std::map<std::string, int
 	initButtons();
 }
 
-MainMenuState::~MainMenuState()
+HighScoreState::~HighScoreState()
 {
 	for (auto it = buttons.begin(); it != buttons.end(); ++it)
 	{
 		delete it->second;
 	}
-
-	delete musicResource;
 }
 
-void MainMenuState::updateInput(const float &dt)
+void HighScoreState::updateInput(const float &dt)
 {
 }
 
-void MainMenuState::updateButtons()
+void HighScoreState::updateButtons()
 {
 	/*Updates all the buttons in the state and handles their functionality*/
 	for (auto &it : buttons)
 	{
 		it.second->update(mousePosView);
-	}
-
-	// New game
-	if (buttons["GAME_STATE"]->isClicked())
-	{
-		states->push(new GameState(window, supportedKeys, states));
-	}
-
-	if (buttons["HIGH_SCORE"]->isClicked())
-	{
-		states->push(new HighScoreState(window, supportedKeys, states));
-	}
-
-	if (buttons["SETTINGS_STATE"]->isClicked())
-	{
-		states->push(new SettingsState(window, supportedKeys, states, musicResource));
 	}
 
 	// Quit game
@@ -147,14 +107,14 @@ void MainMenuState::updateButtons()
 	}
 }
 
-void MainMenuState::update(const float &dt)
+void HighScoreState::update(const float &dt)
 {
 	updateMousePositions();
 	updateInput(dt);
 	updateButtons();
 }
 
-void MainMenuState::renderButtons(sf::RenderTarget *target)
+void HighScoreState::renderButtons(sf::RenderTarget *target)
 {
 	for (auto &it : buttons)
 	{
@@ -162,7 +122,7 @@ void MainMenuState::renderButtons(sf::RenderTarget *target)
 	}
 }
 
-void MainMenuState::render(sf::RenderTarget *target)
+void HighScoreState::render(sf::RenderTarget *target)
 {
 	if (!target)
 		target = window;

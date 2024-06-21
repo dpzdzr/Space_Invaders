@@ -7,6 +7,7 @@
 #include "Alien.h"
 #include "Mysteryship.h"
 #include "InGameMenu.h"
+#include "HighScoreManager.h"
 
 class GameState : public State
 {

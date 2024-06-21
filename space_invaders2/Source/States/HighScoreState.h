@@ -1,13 +1,12 @@
-#ifndef MAINMENUSTATE_H
-#define MAINMENUSTATE_H
+#ifndef HIGHSCORESTATE_H
+#define HIGHSCORESTATE_H
 
 #include "GameState.h"
 #include "Button.h"
 #include "SettingsState.h"
 #include "MusicResource.h"
-#include "HighScoreState.h"
 
-class MainMenuState : public State
+class HighScoreState : public State
 {
 private:
 	// Variables
@@ -15,7 +14,6 @@ private:
 	sf::Text titleText;
 	sf::RectangleShape background;
 	sf::Font font;
-	MusicResource *musicResource;
 
 	std::map<std::string, Button *> buttons;
 
@@ -26,11 +24,10 @@ private:
 	void initTitleText();
 	void initKeybinds();
 	void initButtons();
-	void initMusic();
 
 public:
-	MainMenuState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states);
-	virtual ~MainMenuState();
+	HighScoreState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states);
+	virtual ~HighScoreState();
 
 	// Functions
 	void updateInput(const float &dt);
