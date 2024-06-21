@@ -1,5 +1,5 @@
-#ifndef INGAMEMENU_H
-#define INGAMEMENU_H
+#ifndef GAMESTATEMENU_H
+#define GAMESTATEMENU_H
 
 #include <iostream>
 #include <vector>
@@ -19,11 +19,11 @@
 
 #include "Button.h"
 
-class InGameMenu
+class GameStateMenu
 {
-private:
+protected:
     sf::Font &font;
-    sf::Text InGameMenuText;
+    sf::Text GameMenuStateText;
 
     sf::RectangleShape background;
     sf::RectangleShape container;
@@ -33,8 +33,8 @@ private:
     // Private functions
 
 public:
-    InGameMenu(sf::RenderWindow &window, sf::Font &fon, std::string text);
-    virtual ~InGameMenu();
+    GameStateMenu(sf::RenderWindow &window, sf::Font &fon, std::string text);
+    virtual ~GameStateMenu();
 
     // Accessors
     std::map<std::string, Button *> &getButtons();
@@ -42,8 +42,8 @@ public:
     // functions
     const bool isButtonPressed(const std::string key);
     void addButton(const std::string key, float y, const std::string text);
-    void update(const sf::Vector2f &mousePos);
-    void render(sf::RenderTarget *target);
+    virtual void update(const sf::Vector2f &mousePos);
+    virtual void render(sf::RenderTarget *target);
 };
 
 #endif

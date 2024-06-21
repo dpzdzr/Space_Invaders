@@ -1,6 +1,6 @@
-#include "InGameMenu.h"
+#include "GameStateMenu.h"
 
-InGameMenu::InGameMenu(sf::RenderWindow &window, sf::Font &font, std::string text) : font(font)
+GameStateMenu::GameStateMenu(sf::RenderWindow &window, sf::Font &font, std::string text) : font(font)
 {
     // Init background
     background.setSize(sf::Vector2f(
@@ -18,16 +18,16 @@ InGameMenu::InGameMenu(sf::RenderWindow &window, sf::Font &font, std::string tex
         30.f);
 
     // Init text
-    InGameMenuText.setFont(font);
-    InGameMenuText.setFillColor(sf::Color(255, 255, 255, 200));
-    InGameMenuText.setCharacterSize(40);
-    InGameMenuText.setString(text);
-    InGameMenuText.setPosition(
-        container.getPosition().x + container.getSize().x / 2.f - InGameMenuText.getGlobalBounds().width / 2.f,
+    GameMenuStateText.setFont(font);
+    GameMenuStateText.setFillColor(sf::Color(255, 255, 255, 200));
+    GameMenuStateText.setCharacterSize(40);
+    GameMenuStateText.setString(text);
+    GameMenuStateText.setPosition(
+        container.getPosition().x + container.getSize().x / 2.f - GameMenuStateText.getGlobalBounds().width / 2.f,
         container.getPosition().y + 20.f);
 }
 
-InGameMenu::~InGameMenu()
+GameStateMenu::~GameStateMenu()
 {
     for (auto it = buttons.begin(); it != buttons.end(); ++it)
     {
@@ -35,19 +35,19 @@ InGameMenu::~InGameMenu()
     }
 }
 
-std::map<std::string, Button *> &InGameMenu::getButtons()
+std::map<std::string, Button *> &GameStateMenu::getButtons()
 {
     return buttons;
 }
 
 // functions
 
-const bool InGameMenu::isButtonPressed(const std::string key)
+const bool GameStateMenu::isButtonPressed(const std::string key)
 {
     return buttons[key]->isClicked();
 }
 
-void InGameMenu::addButton(const std::string key, float y, const std::string text)
+void GameStateMenu::addButton(const std::string key, float y, const std::string text)
 {   
     float width = container.getSize().x - 20.f;
     float height = 50.f;
@@ -57,7 +57,7 @@ void InGameMenu::addButton(const std::string key, float y, const std::string tex
                                        sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 }
 
-void InGameMenu::update(const sf::Vector2f &mousePos)
+void GameStateMenu::update(const sf::Vector2f &mousePos)
 {
     for(auto &i : buttons)
     {
@@ -65,7 +65,7 @@ void InGameMenu::update(const sf::Vector2f &mousePos)
     }
 }
 
-void InGameMenu::render(sf::RenderTarget *target)
+void GameStateMenu::render(sf::RenderTarget *target)
 {
     target->draw(background);
     target->draw(container);
@@ -75,5 +75,5 @@ void InGameMenu::render(sf::RenderTarget *target)
         i.second->render(target);
     }
 
-    target->draw(InGameMenuText);
+    target->draw(GameMenuStateText);
 }

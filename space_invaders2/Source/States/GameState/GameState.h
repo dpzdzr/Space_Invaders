@@ -6,15 +6,19 @@
 #include "Obstacle.h"
 #include "Alien.h"
 #include "Mysteryship.h"
-#include "InGameMenu.h"
+#include "GameStateMenu.h"
 #include "HighScoreManager.h"
+#include "PauseMenu.h"
+#include "GameOverMenu.h"
+#include "MusicResource.h"
 
 class GameState : public State
 {
 private:
 	sf::Font font;
-	InGameMenu *pauseMenu;
-	InGameMenu *gameOverMenu;
+	PauseMenu *pauseMenu;
+	GameOverMenu *gameOverMenu;
+	MusicResource *musicResource;
 
 	Player *player;
 	Laser *laser;
@@ -47,7 +51,6 @@ private:
 	void updatePauseMenuButtons();
 	void updateGameOverMenuButtons();
 	void initTexts();
-	void updateScoreText();
 	void formatScoreText();
 
 	// Aliens
@@ -72,7 +75,7 @@ private:
 	float timeLastSpawn;
 
 public:
-	GameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states);
+	GameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, MusicResource *musicResource);
 	virtual ~GameState();
 
 	// Functions

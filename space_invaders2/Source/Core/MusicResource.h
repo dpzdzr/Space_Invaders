@@ -11,12 +11,15 @@ private:
     bool musicPaused;
     bool musicOn;
     bool gameMode;
+    sf::SoundBuffer playerLaserSoundBuffer;
+    sf::Sound playerLaserSound;
 
 public:
     MusicResource();
     void playMusic();
     void stopMusic();
     bool getMusicStatus();
+    void playPlayerLaserSound();
 };
 
 #endif

@@ -20,7 +20,7 @@ public:
 
 	std::vector<Laser> lasers;
 	void resetPlayer();
-	void FireLaser();
+	bool FireLaser();
 	virtual ~Player();
 	int getLives();
 	void takeDamage();

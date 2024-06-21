@@ -127,7 +127,7 @@ void MainMenuState::updateButtons()
 	// New game
 	if (buttons["GAME_STATE"]->isClicked())
 	{
-		states->push(new GameState(window, supportedKeys, states));
+		states->push(new GameState(window, supportedKeys, states, musicResource));
 	}
 
 	if (buttons["HIGH_SCORE"]->isClicked())

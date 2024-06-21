@@ -80,17 +80,17 @@ void GameState::initTextures()
 
 void GameState::initPauseMenu()
 {
-	pauseMenu = new InGameMenu(*window, font, "PAUSED");
-	pauseMenu->addButton("RESUME", 150.f, "Resume");
-	pauseMenu->addButton("RESTART", 250.f, "Restart");
-	pauseMenu->addButton("QUIT", 350.f, "Quit");
+	pauseMenu = new PauseMenu(*window, font, "PAUSED");
+	pauseMenu->addButton("RESUME", 200.f, "Resume");
+	pauseMenu->addButton("RESTART", 300.f, "Restart");
+	pauseMenu->addButton("QUIT", 400.f, "Quit");
 }
 
 void GameState::initGameOverMenu()
 {
-	gameOverMenu = new InGameMenu(*window, font, "GAME OVER");
-	gameOverMenu->addButton("RETRY", 150.f, "Retry");
-	gameOverMenu->addButton("QUIT", 250.f, "Quit");
+	gameOverMenu = new GameOverMenu(*window, font, "GAME OVER", score);
+	gameOverMenu->addButton("RETRY", 200.f, "Retry");
+	gameOverMenu->addButton("QUIT", 300.f, "Quit");
 }
 
 void GameState::initPlayers()
@@ -404,8 +404,8 @@ void GameState::spawnMysteryShipWithIntervals(const float &dt)
 	}
 }
 
-GameState::GameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states)
-	: State(window, supportedKeys, states)
+GameState::GameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, MusicResource *musicResource)
+	: State(window, supportedKeys, states), musicResource(musicResource)
 {
 	std::srand(static_cast<unsigned>(std::time(nullptr)));
 	initVariables();
@@ -465,7 +465,8 @@ void GameState::updatePlayerInput(const float &dt)
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("FIRE"))))
 	{
-		player->FireLaser();
+		if (player->FireLaser())
+			musicResource->playPlayerLaserSound();
 	}
 
 	// if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("MOVE_UP"))))

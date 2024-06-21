@@ -23,9 +23,11 @@ target_include_directories(space_invaders PRIVATE
     ${CMAKE_SOURCE_DIR}/Source/Core
     ${CMAKE_SOURCE_DIR}/Source/Entities
     ${CMAKE_SOURCE_DIR}/Source/States
+    ${CMAKE_SOURCE_DIR}/Source/States/GameState
     ${CMAKE_SOURCE_DIR}/Source/UI
 )
 target_compile_definitions(space_invaders PUBLIC RESOURCES="${CMAKE_SOURCE_DIR}/resources/")
+
 
 if(WIN32)
     add_custom_command(

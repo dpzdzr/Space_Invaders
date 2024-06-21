@@ -3,8 +3,8 @@
 // Initilizer functions
 void Player::initVariables()
 {
-	lastFireTime = 0.;
-	lives = 3;
+	lastFireTime = 1.;
+	lives = 1;
 }
 
 void Player::initComponents()
@@ -61,11 +61,13 @@ void Player::resetPlayer()
 	setPosition(startingPosition.x, startingPosition.y);
 }
 
-void Player::FireLaser()
+bool Player::FireLaser()
 {
 	if (lastFireTime >= 1.f)
 	{
 		lasers.push_back(Laser({sprite.getPosition().x + sprite.getGlobalBounds().height / 2, sprite.getPosition().y}, -3));
 		lastFireTime = 0.f;
+		return true;
 	}
+	return false;
 }

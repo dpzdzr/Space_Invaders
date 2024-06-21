@@ -5,6 +5,8 @@ MusicResource::MusicResource() : musicOn(true)
     music.openFromFile(RESOURCES "Sounds/music.ogg");
     music.setLoop(true);
     musicPaused = false;
+    playerLaserSoundBuffer.loadFromFile(RESOURCES "Sounds/laser.ogg");
+    playerLaserSound.setBuffer(playerLaserSoundBuffer);
 }
 
 void MusicResource::playMusic()
@@ -28,4 +30,9 @@ void MusicResource::stopMusic()
 bool MusicResource::getMusicStatus()
 {
     return musicPaused;
+}
+
+void MusicResource::playPlayerLaserSound()
+{
+    playerLaserSound.play();
 }
