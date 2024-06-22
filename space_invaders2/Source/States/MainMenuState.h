@@ -7,6 +7,7 @@
 #include "MusicResource.h"
 #include "HighScoreState.h"
 #include "User.h"
+#include "HowToPlayState.h"
 
 class MainMenuState : public State
 {

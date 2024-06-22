@@ -1,5 +1,20 @@
 #include "GameState.h"
 
+void GameState::nextLevel()
+{
+	++level;
+	levelText.setString("Level: " + std::to_string(level));
+	resetGame();
+	reinitGame();
+}
+
+void GameState::gameOver()
+{
+	std::cout << "Game over!\n";
+	highScoreManager->addScore("Player", score);
+	gameOverFlag = true;
+}
+
 void GameState::reinitGame()
 {
 	initVariables();
@@ -18,6 +33,7 @@ void GameState::resetGame()
 	livesText.setString("Lives: " + std::to_string(player->getLives()));
 	score = 0;
 	formatScoreText();
+	levelText.setString("Level: " + std::to_string(level));
 }
 
 void GameState::initVariables()
@@ -30,6 +46,7 @@ void GameState::initVariables()
 	gameOverFlag = false;
 	alienLaserSpeed = 3;
 	score = 0;
+	level = 1;
 }
 
 void GameState::initBackground()
@@ -126,6 +143,10 @@ void GameState::checkForCollisions()
 
 				it = aliens.erase(it);
 				laser.active = false;
+				if (aliens.empty())
+				{
+					nextLevel();
+				}
 			}
 			else
 			{
@@ -217,13 +238,6 @@ void GameState::checkForCollisions()
 	}
 }
 
-void GameState::gameOver()
-{
-	std::cout << "Game over!\n";
-	highScoreManager->addScore("Player", score);
-	gameOverFlag = true;
-}
-
 void GameState::updatePauseMenuButtons()
 {
 	if (pauseMenu->isButtonPressed("RESUME"))
@@ -257,16 +271,24 @@ void GameState::updateGameOverMenuButtons()
 
 void GameState::initTexts()
 {
+	int characterSize = 28;
+
 	livesText.setFont(font);
-	livesText.setCharacterSize(30);
+	livesText.setCharacterSize(characterSize);
 	livesText.setFillColor(sf::Color::White);
 	livesText.setPosition(15.f, 15.f);
 	livesText.setString("Lives: " + std::to_string(player->getLives()));
 
+	levelText.setFont(font);
+	levelText.setCharacterSize(characterSize);
+	levelText.setFillColor(sf::Color::White);
+	levelText.setString("Level: " + std::to_string(level));
+	levelText.setPosition(window->getSize().x / 2.f - levelText.getGlobalBounds().width / 2.f, 15.f);
+
 	scoreText.setFont(font);
-	scoreText.setCharacterSize(30);
+	scoreText.setCharacterSize(characterSize);
 	scoreText.setFillColor(sf::Color::White);
-	scoreText.setPosition(window->getSize().x - 200.f, 15.f);
+	scoreText.setPosition(window->getSize().x - 190.f, 15.f);
 	formatScoreText();
 }
 
@@ -350,7 +372,10 @@ void GameState::alienShootLaser(const float &dt)
 {
 	timeLastAlienFired += dt;
 
-	if (timeLastAlienFired >= alienLaserShootInterval && !aliens.empty())
+	float adjustmentFactor = 1.0f + (1.0f / (aliens.size() + 1));
+	float adjustedInterval = alienLaserShootInterval / adjustmentFactor;
+
+	if (timeLastAlienFired >= adjustedInterval && !aliens.empty())
 	{
 		int randomIndex = std::rand() % aliens.size();
 		Alien &alien = *aliens[randomIndex];
@@ -544,8 +569,12 @@ void GameState::render(sf::RenderTarget *target)
 
 	player->render(target);
 
-	target->draw(livesText);
-	target->draw(scoreText);
+	if (!gameOverFlag)
+	{
+		target->draw(livesText);
+		target->draw(scoreText);
+		target->draw(levelText);
+	}
 
 	if (paused) // Pause menu render
 	{

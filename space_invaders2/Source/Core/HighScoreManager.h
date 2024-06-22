@@ -5,6 +5,7 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include <filesystem>
 
 struct ScoreEntry
 {
@@ -27,6 +28,7 @@ private:
     void initVariables();
     void initHighScores();
     void initFileName();
+    
 
 public:
     HighScoreManager();
@@ -34,7 +36,8 @@ public:
     void addScore(std::string userName, int score);
     void saveToFile();
     void loadFromFile();
-    std::vector<ScoreEntry> &getHighScores() { return highScores; }  
+    void clearHighScoreFile();
+    std::vector<ScoreEntry> &getHighScores() { return highScores; }
 };
 
 #endif

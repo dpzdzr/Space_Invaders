@@ -9,7 +9,7 @@ void MainMenuState::initBackground()
 {
 	background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
 
-	if (!backgroundTexture.loadFromFile(RESOURCES "Images/Backgrounds/tlo.png"))
+	if (!backgroundTexture.loadFromFile(RESOURCES "Images/Backgrounds/main_menu.png"))
 	{
 		throw "ERORR::MAINMENU::TEXTURE";
 	}
@@ -63,25 +63,20 @@ void MainMenuState::initButtons()
 	float buttonY = windowHeight * 0.3f;
 	float spacesBetweenButtons = windowHeight * 0.1f;
 
-	buttons["GAME_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
-									   &font, "New Game",
-									   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
-	buttonY += spacesBetweenButtons;
+	std::vector<std::pair<std::string, std::string>> buttonNames = {
+		{"GAME_STATE", "New Game"},
+		{"HOW_TO_PLAY_STATE", "How to play"},
+		{"HIGH_SCORE_STATE", "High score"},
+		{"SETTINGS_STATE", "Settings"},
+		{"EXIT_STATE", "Quit"}};
 
-	buttons["HIGH_SCORE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
-									   &font, "High Score",
-									   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
-	buttonY += spacesBetweenButtons;
-
-	buttons["SETTINGS_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
-										   &font, "Settings",
-										   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
-	buttonY += spacesBetweenButtons;
-
-	buttons["EXIT_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
-									   &font, "Quit",
-									   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
-	buttonY += spacesBetweenButtons;
+	for (auto &buttonName : buttonNames)
+	{
+		buttons[buttonName.first] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
+											   &font, buttonName.second,
+											   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		buttonY += spacesBetweenButtons;
+	}
 }
 
 void MainMenuState::initMusic()
@@ -144,7 +139,7 @@ void MainMenuState::updateButtons()
 		states->push(new GameState(window, supportedKeys, states, musicResource, highScoreManager));
 	}
 
-	if (buttons["HIGH_SCORE"]->isClicked())
+	if (buttons["HIGH_SCORE_STATE"]->isClicked())
 	{
 		states->push(new HighScoreState(window, supportedKeys, states, highScoreManager));
 	}
@@ -152,6 +147,11 @@ void MainMenuState::updateButtons()
 	if (buttons["SETTINGS_STATE"]->isClicked())
 	{
 		states->push(new SettingsState(window, supportedKeys, states, musicResource));
+	}
+
+	if (buttons["HOW_TO_PLAY_STATE"]->isClicked())
+	{
+		states->push(new HowToPlayState(window, supportedKeys, states));
 	}
 
 	// Quit game

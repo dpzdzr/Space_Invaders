@@ -1,7 +1,0 @@
-user 1234
-Player 600
-Player 300
-Player 200
-Player 100
-Player 100
-Player 0

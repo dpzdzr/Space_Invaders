@@ -63,10 +63,17 @@ void HighScoreState::initButtons()
 	float buttonY = windowHeight * 0.7f;
 	float spacesBetweenButtons = windowHeight * 0.1f;
 
-	buttons["EXIT_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
-									   &font, "Quit",
-									   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
-	buttonY += spacesBetweenButtons;
+	std::vector<std::pair<std::string, std::string>> buttonNames = {
+		{"CLEAR_HIGHSCORE", "Clear High Score"},
+		{"EXIT_STATE", "Quit"}};
+
+	for (auto &buttonName : buttonNames)
+	{
+		buttons[buttonName.first] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
+										   &font, buttonName.second,
+										   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		buttonY += spacesBetweenButtons;
+	}
 }
 
 void HighScoreState::initHighScoreText()
@@ -95,6 +102,8 @@ void HighScoreState::initHighScoreText()
 	userNameText.setString(ssUsername.str());
 	scoreText.setString(ssScore.str());
 }
+
+
 
 HighScoreState::HighScoreState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, HighScoreManager *highScoreManager)
 	: State(window, supportedKeys, states), highScoreManager(highScoreManager)
@@ -129,10 +138,16 @@ void HighScoreState::updateButtons()
 	}
 
 	// Quit game
-	if (buttons["EXIT_STATE"]->isClicked())
+	if(buttons["CLEAR_HIGHSCORE"]->isClicked())
+	{
+		highScoreManager->clearHighScoreFile();
+		initHighScoreText();
+	}
+	else if (buttons["EXIT_STATE"]->isClicked())
 	{
 		endState();
 	}
+
 }
 
 void HighScoreState::update(const float &dt)

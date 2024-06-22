@@ -3,6 +3,22 @@
 
 #include "Player.h"
 
+
+// class SharedStateData
+// {
+// private:
+// 	sf::RenderWindow *window;
+// 	std::map<std::string, int> *supportedKeys;
+// 	std::stack<State *> *states;
+// 	MusicResource *musicResource;
+// 	HighScoreManager *highScoreManager;
+// 	User *user;
+
+// public:
+// 	SharedStateData(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states);
+// 	~SharedStateData();
+// };
+
 class State
 {
 private:

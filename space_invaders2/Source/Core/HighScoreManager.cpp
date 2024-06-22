@@ -61,3 +61,9 @@ void HighScoreManager::loadFromFile()
 
     ifs.close();
 }
+
+void HighScoreManager::clearHighScoreFile()
+{
+    std::filesystem::resize_file(RESOURCES "HighScore/HighScore.txt", 0);
+    highScores.clear();
+}

@@ -1,6 +1,8 @@
 #ifndef HIGHSCORESTATE_H
 #define HIGHSCORESTATE_H
 
+#include <filesystem>
+
 #include "GameState.h"
 #include "Button.h"
 #include "SettingsState.h"
@@ -30,6 +32,7 @@ private:
 	void initKeybinds();
 	void initButtons();
 	void initHighScoreText();
+
 
 public:
 	HighScoreState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, HighScoreManager *highScoreManager);

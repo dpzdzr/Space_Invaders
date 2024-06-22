@@ -1,10 +1,10 @@
-#include "SettingsState.h"
+#include "HowToPlayState.h"
 
-void SettingsState::initVariables()
+void HowToPlayState::initVariables()
 {
 }
 
-void SettingsState::initBackground()
+void HowToPlayState::initBackground()
 {
     background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
 
@@ -16,7 +16,7 @@ void SettingsState::initBackground()
     background.setTexture(&backgroundTexture);
 }
 
-void SettingsState::initFonts()
+void HowToPlayState::initFonts()
 {
     if (!font.loadFromFile(RESOURCES "Fonts/Pixelon.TTF"))
     {
@@ -24,16 +24,16 @@ void SettingsState::initFonts()
     }
 }
 
-void SettingsState::initTitleText()
+void HowToPlayState::initTitleText()
 {
     titleText.setFont(font);
-    titleText.setString("Settings");
+    titleText.setString("How to play");
     titleText.setCharacterSize(70);
     titleText.setFillColor(sf::Color::White);
     titleText.setPosition(window->getSize().x / 2.f - titleText.getGlobalBounds().width / 2.f, window->getSize().y * 0.08f);
 }
 
-void SettingsState::initKeybinds()
+void HowToPlayState::initKeybinds()
 {
     std::ifstream ifs(RESOURCES "Config/SettingsStates_keybinds.ini");
 
@@ -50,7 +50,7 @@ void SettingsState::initKeybinds()
     ifs.close();
 }
 
-void SettingsState::initButtons()
+void HowToPlayState::initButtons()
 {
     float windowWidth = window->getSize().x;
     float windowHeight = window->getSize().y;
@@ -59,36 +59,45 @@ void SettingsState::initButtons()
     float buttonHeight = windowHeight * 0.08f;
 
     float buttonX = (windowWidth - buttonWidth) / 2.f;
-    float buttonY = windowHeight * 0.3f;
+    float buttonY = windowHeight * 0.6f;
     float spacesBetweenButtons = windowHeight * 0.1f;
 
-    std::vector<std::pair<std::string, std::string>> buttonNames = {
-        {"MUSIC_STATUS", musicResource->isMusicPaused() ? "Music: off" : "Music: on"},
-        {"SOUNDS_STATUS", musicResource->isSoundOn() ? "Sounds: on" : "Sounds: off"},
-        {"EXIT_STATE", "Quit"}};
+    // std::vector<std::pair<std::string, std::string>> buttonNames = {
+    //     {"MUSIC_STATUS", musicResource->isMusicPaused() ? "Music: off" : "Music: on"},
+    //     {"SOUNDS_STATUS", musicResource->isSoundOn() ? "Sounds: on" : "Sounds: off"},
+    //     {"EXIT_STATE", "Quit"}};
 
-    for (auto &buttonName : buttonNames)
-    {
-        buttons[buttonName.first] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
-                                               &font, buttonName.second,
-                                               sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
-        buttonY += spacesBetweenButtons;
-    }
+    // for (auto &buttonName : buttonNames)
+    // {
+    buttons["EXIT_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
+                                       &font, "Quit",
+                                       sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+    buttonY += spacesBetweenButtons;
+    // }
 }
 
-SettingsState::SettingsState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, MusicResource *musicResource)
+void HowToPlayState::initHowToPlayText()
+{
+    howToPlayText.setFont(font);
+    howToPlayText.setString("A - move left\nD - move right\nSpace - shoot\nEsc - pause\n");
+    howToPlayText.setCharacterSize(35);
+    howToPlayText.setFillColor(sf::Color::White);
+    howToPlayText.setPosition(window->getSize().x / 2.f - howToPlayText.getGlobalBounds().width / 2.f, window->getSize().y * 0.3f);
+}
+
+HowToPlayState::HowToPlayState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states)
     : State(window, supportedKeys, states)
 {
-    this->musicResource = musicResource;
     initVariables();
     initBackground();
     initFonts();
     initTitleText();
     initKeybinds();
     initButtons();
+    initHowToPlayText();
 }
 
-SettingsState::~SettingsState()
+HowToPlayState::~HowToPlayState()
 {
     for (auto it = buttons.begin(); it != buttons.end(); ++it)
     {
@@ -99,11 +108,11 @@ SettingsState::~SettingsState()
 // Accessors
 
 // Functions
-void SettingsState::updateInput(const float &dt)
+void HowToPlayState::updateInput(const float &dt)
 {
 }
 
-void SettingsState::updateButtons()
+void HowToPlayState::updateButtons()
 {
     /*Updates all the buttons in the state and handles their functionality*/
     for (auto &it : buttons)
@@ -116,42 +125,16 @@ void SettingsState::updateButtons()
     {
         endState();
     }
-    else if (buttons["MUSIC_STATUS"]->isClicked())
-    {
-        if (musicResource->isMusicPaused() == true)
-        {
-            buttons["MUSIC_STATUS"]->changeText("Music: on");
-            musicResource->playMusic();
-        }
-        else
-        {
-            buttons["MUSIC_STATUS"]->changeText("Music: off");
-            musicResource->stopMusic();
-        }
-    }
-    else if (buttons["SOUNDS_STATUS"]->isClicked())
-    {
-        if (musicResource->isSoundOn() == true)
-        {
-            buttons["SOUNDS_STATUS"]->changeText("Sound: off");
-            musicResource->stopSound();
-        }
-        else
-        {
-            buttons["SOUNDS_STATUS"]->changeText("Sound: on");
-            musicResource->playSound();
-        }
-    }
 }
 
-void SettingsState::update(const float &dt)
+void HowToPlayState::update(const float &dt)
 {
     updateMousePositions();
     updateInput(dt);
     updateButtons();
 }
 
-void SettingsState::renderButtons(sf::RenderTarget *target)
+void HowToPlayState::renderButtons(sf::RenderTarget *target)
 {
     for (auto &it : buttons)
     {
@@ -159,13 +142,14 @@ void SettingsState::renderButtons(sf::RenderTarget *target)
     }
 }
 
-void SettingsState::render(sf::RenderTarget *target)
+void HowToPlayState::render(sf::RenderTarget *target)
 {
     if (!target)
         target = window;
 
     target->draw(background);
     target->draw(titleText);
+    target->draw(howToPlayText);
     renderButtons(target);
 
     // Remove later

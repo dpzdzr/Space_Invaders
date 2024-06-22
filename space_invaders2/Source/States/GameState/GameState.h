@@ -28,14 +28,17 @@ private:
 	bool run;
 	bool gameOverFlag;
 	int score;
+	int level;
 
 	HighScoreManager *highScoreManager;
 
-	//Texts
+	// Texts
 	sf::Text livesText;
 	sf::Text scoreText;
+	sf::Text levelText;
 
 	// Functions
+	void nextLevel();
 	void reinitGame();
 	void resetGame();
 	void initVariables();
@@ -57,7 +60,7 @@ private:
 
 	// Aliens
 	int alienLaserSpeed;
-	constexpr static float alienLaserShootInterval = 0.2;
+	constexpr static float alienLaserShootInterval = 0.5;
 	float timeLastAlienFired;
 	int aliensDirection;
 	std::vector<Alien *> aliens;
