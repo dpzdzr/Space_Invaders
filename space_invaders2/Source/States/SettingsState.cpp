@@ -63,8 +63,13 @@ void SettingsState::initButtons()
     float spacesBetweenButtons = windowHeight * 0.1f;
 
     buttons["MUSIC_STATUS"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
-                                         &font, !musicResource->getMusicStatus() ? "Music: on" : "Music: off",
+                                         &font, musicResource->isMusicPaused() ? "Music: off" : "Music: on",
                                          sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+    buttonY += spacesBetweenButtons;
+
+    buttons["SOUNDS_STATUS"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
+                                          &font, musicResource->isSoundOn() ? "Sounds: on" : "Sounds: off",
+                                          sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
     buttonY += spacesBetweenButtons;
 
     buttons["EXIT_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
@@ -113,9 +118,9 @@ void SettingsState::updateButtons()
     {
         endState();
     }
-    if (buttons["MUSIC_STATUS"]->isClicked())
+    else if (buttons["MUSIC_STATUS"]->isClicked())
     {
-        if (musicResource->getMusicStatus() == true)
+        if (musicResource->isMusicPaused() == true)
         {
             buttons["MUSIC_STATUS"]->changeText("Music: on");
             musicResource->playMusic();
@@ -124,6 +129,19 @@ void SettingsState::updateButtons()
         {
             buttons["MUSIC_STATUS"]->changeText("Music: off");
             musicResource->stopMusic();
+        }
+    }
+    else if (buttons["SOUNDS_STATUS"]->isClicked())
+    {
+        if (musicResource->isSoundOn() == true)
+        {
+            buttons["SOUNDS_STATUS"]->changeText("Sound: off");
+            musicResource->stopSound();
+        }
+        else
+        {
+            buttons["SOUNDS_STATUS"]->changeText("Sound: on");
+            musicResource->playSound();
         }
     }
 }

@@ -4,7 +4,7 @@
 void Player::initVariables()
 {
 	lastFireTime = 1.;
-	lives = 1;
+	lives = 3;
 }
 
 void Player::initComponents()

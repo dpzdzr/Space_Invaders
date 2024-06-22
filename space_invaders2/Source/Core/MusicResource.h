@@ -9,17 +9,24 @@ private:
     // Variables
     sf::Music music;
     bool musicPaused;
-    bool musicOn;
+    bool musicOnOff;
     bool gameMode;
+    bool soundsOnOff;
     sf::SoundBuffer playerLaserSoundBuffer;
+    sf::SoundBuffer playerExplosionSoundBuffer;
     sf::Sound playerLaserSound;
+    sf::Sound playerExplosionSound;
 
 public:
     MusicResource();
     void playMusic();
     void stopMusic();
-    bool getMusicStatus();
+    bool isMusicPaused();
+    bool isSoundOn();
     void playPlayerLaserSound();
+    void playPlayerExplosionSound();
+    void playSound();
+    void stopSound();
 };
 
 #endif

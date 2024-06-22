@@ -165,6 +165,7 @@ void GameState::checkForCollisions()
 		{
 			laser.active = false;
 			player->takeDamage();
+			musicResource->playPlayerExplosionSound();
 			livesText.setString("Lives: " + std::to_string(player->getLives()));
 			if (player->getLives() == 0)
 			{
