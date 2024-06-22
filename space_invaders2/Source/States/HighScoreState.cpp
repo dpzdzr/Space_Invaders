@@ -60,7 +60,7 @@ void HighScoreState::initButtons()
 	float buttonHeight = windowHeight * 0.08f;
 
 	float buttonX = (windowWidth - buttonWidth) / 2.f;
-	float buttonY = windowHeight * 0.3f;
+	float buttonY = windowHeight * 0.7f;
 	float spacesBetweenButtons = windowHeight * 0.1f;
 
 	buttons["EXIT_STATE"] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
@@ -69,8 +69,35 @@ void HighScoreState::initButtons()
 	buttonY += spacesBetweenButtons;
 }
 
-HighScoreState::HighScoreState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states)
-	: State(window, supportedKeys, states)
+void HighScoreState::initHighScoreText()
+{
+	int characterSize = 30;
+
+	userNameText.setFont(font);
+	userNameText.setCharacterSize(characterSize);
+	userNameText.setFillColor(sf::Color::White);
+	userNameText.setPosition(window->getSize().x * 0.3f, window->getSize().y * 0.3f);
+
+	scoreText.setFont(font);
+	scoreText.setCharacterSize(characterSize);
+	scoreText.setFillColor(sf::Color::White);
+	scoreText.setPosition(window->getSize().x * 0.6f, window->getSize().y * 0.3f);
+
+	std::stringstream ssUsername;
+	std::stringstream ssScore;
+
+	for (auto &score : highScoreManager->getHighScores())
+	{
+		ssUsername << score.userName << std::endl;
+		ssScore << score.score << "\n";
+	}
+
+	userNameText.setString(ssUsername.str());
+	scoreText.setString(ssScore.str());
+}
+
+HighScoreState::HighScoreState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, HighScoreManager *highScoreManager)
+	: State(window, supportedKeys, states), highScoreManager(highScoreManager)
 {
 	initVariables();
 	initBackground();
@@ -78,6 +105,7 @@ HighScoreState::HighScoreState(sf::RenderWindow *window, std::map<std::string, i
 	initTitleText();
 	initKeybinds();
 	initButtons();
+	initHighScoreText();
 }
 
 HighScoreState::~HighScoreState()
@@ -129,7 +157,8 @@ void HighScoreState::render(sf::RenderTarget *target)
 
 	target->draw(background);
 	target->draw(titleText);
-
+	target->draw(userNameText);
+	target->draw(scoreText);
 	renderButtons(target);
 
 	// Remove later

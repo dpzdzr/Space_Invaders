@@ -27,7 +27,7 @@ void SettingsState::initFonts()
 void SettingsState::initTitleText()
 {
     titleText.setFont(font);
-    titleText.setString("Options");
+    titleText.setString("Settings");
     titleText.setCharacterSize(70);
     titleText.setFillColor(sf::Color::White);
     titleText.setPosition(window->getSize().x / 2.f - titleText.getGlobalBounds().width / 2.f, window->getSize().y * 0.08f);
@@ -55,7 +55,7 @@ void SettingsState::initButtons()
     float windowWidth = window->getSize().x;
     float windowHeight = window->getSize().y;
 
-    float buttonWidth = windowWidth * 0.2f;
+    float buttonWidth = windowWidth * 0.3f;
     float buttonHeight = windowHeight * 0.08f;
 
     float buttonX = (windowWidth - buttonWidth) / 2.f;

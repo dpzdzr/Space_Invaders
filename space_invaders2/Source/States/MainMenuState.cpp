@@ -90,6 +90,16 @@ void MainMenuState::initMusic()
 	musicResource->playMusic();
 }
 
+void MainMenuState::initHighScoreManager()
+{
+	highScoreManager = new HighScoreManager();
+}
+
+void MainMenuState::initUser()
+{
+	user = new User();
+}
+
 MainMenuState::MainMenuState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states)
 	: State(window, supportedKeys, states)
 {
@@ -100,6 +110,8 @@ MainMenuState::MainMenuState(sf::RenderWindow *window, std::map<std::string, int
 	initTitleText();
 	initKeybinds();
 	initButtons();
+	initHighScoreManager();
+	initUser();
 }
 
 MainMenuState::~MainMenuState()
@@ -110,6 +122,8 @@ MainMenuState::~MainMenuState()
 	}
 
 	delete musicResource;
+	delete highScoreManager;
+	delete user;
 }
 
 void MainMenuState::updateInput(const float &dt)
@@ -127,12 +141,12 @@ void MainMenuState::updateButtons()
 	// New game
 	if (buttons["GAME_STATE"]->isClicked())
 	{
-		states->push(new GameState(window, supportedKeys, states, musicResource));
+		states->push(new GameState(window, supportedKeys, states, musicResource, highScoreManager));
 	}
 
 	if (buttons["HIGH_SCORE"]->isClicked())
 	{
-		states->push(new HighScoreState(window, supportedKeys, states));
+		states->push(new HighScoreState(window, supportedKeys, states, highScoreManager));
 	}
 
 	if (buttons["SETTINGS_STATE"]->isClicked())

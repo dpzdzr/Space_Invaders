@@ -6,6 +6,7 @@
 #include "SettingsState.h"
 #include "MusicResource.h"
 #include "HighScoreState.h"
+#include "User.h"
 
 class MainMenuState : public State
 {
@@ -16,6 +17,10 @@ private:
 	sf::RectangleShape background;
 	sf::Font font;
 	MusicResource *musicResource;
+	User *user;
+
+
+	HighScoreManager *highScoreManager;
 
 	std::map<std::string, Button *> buttons;
 
@@ -27,6 +32,8 @@ private:
 	void initKeybinds();
 	void initButtons();
 	void initMusic();
+	void initHighScoreManager();
+	void initUser();
 
 public:
 	MainMenuState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states);

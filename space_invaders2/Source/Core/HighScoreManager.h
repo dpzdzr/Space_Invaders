@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <algorithm>
 
 struct ScoreEntry
 {
@@ -32,6 +33,8 @@ public:
     ~HighScoreManager();
     void addScore(std::string userName, int score);
     void saveToFile();
+    void loadFromFile();
+    std::vector<ScoreEntry> &getHighScores() { return highScores; }  
 };
 
 #endif

@@ -5,6 +5,7 @@
 #include "Button.h"
 #include "SettingsState.h"
 #include "MusicResource.h"
+#include "HighScoreManager.h"
 
 class HighScoreState : public State
 {
@@ -15,6 +16,10 @@ private:
 	sf::RectangleShape background;
 	sf::Font font;
 
+	HighScoreManager *highScoreManager;
+	sf::Text userNameText;
+	sf::Text scoreText;
+
 	std::map<std::string, Button *> buttons;
 
 	// Functions
@@ -24,9 +29,10 @@ private:
 	void initTitleText();
 	void initKeybinds();
 	void initButtons();
+	void initHighScoreText();
 
 public:
-	HighScoreState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states);
+	HighScoreState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, HighScoreManager *highScoreManager);
 	virtual ~HighScoreState();
 
 	// Functions

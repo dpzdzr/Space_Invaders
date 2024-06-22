@@ -29,6 +29,8 @@ private:
 	bool gameOverFlag;
 	int score;
 
+	HighScoreManager *highScoreManager;
+
 	//Texts
 	sf::Text livesText;
 	sf::Text scoreText;
@@ -75,7 +77,7 @@ private:
 	float timeLastSpawn;
 
 public:
-	GameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, MusicResource *musicResource);
+	GameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, MusicResource *musicResource, HighScoreManager *highScoreManager);
 	virtual ~GameState();
 
 	// Functions

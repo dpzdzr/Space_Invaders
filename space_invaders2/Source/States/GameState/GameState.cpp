@@ -220,6 +220,7 @@ void GameState::checkForCollisions()
 void GameState::gameOver()
 {
 	std::cout << "Game over!\n";
+	highScoreManager->addScore("Player", score);
 	gameOverFlag = true;
 }
 
@@ -405,8 +406,8 @@ void GameState::spawnMysteryShipWithIntervals(const float &dt)
 	}
 }
 
-GameState::GameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, MusicResource *musicResource)
-	: State(window, supportedKeys, states), musicResource(musicResource)
+GameState::GameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, MusicResource *musicResource, HighScoreManager *highScoreManager)
+	: State(window, supportedKeys, states), musicResource(musicResource), highScoreManager(highScoreManager)
 {
 	std::srand(static_cast<unsigned>(std::time(nullptr)));
 	initVariables();
