@@ -11,7 +11,7 @@ void GameState::nextLevel()
 void GameState::gameOver()
 {
 	std::cout << "Game over!\n";
-	highScoreManager->addScore("Player", score);
+	highScoreManager->addScore(user->getUsername(), score);
 	gameOverFlag = true;
 }
 
@@ -86,7 +86,7 @@ void GameState::initFonts()
 	}
 }
 
-void GameState::initTextures()
+void GameState::initTextures(std::map<std::string, sf::Texture>&textures)
 {
 	textures["PLAYER_IDLE"].loadFromFile(RESOURCES "Images/Sprites/Player/test.png");
 	textures["ALIEN_1"].loadFromFile(RESOURCES "Images/Sprites/Aliens/alien_1.png");
@@ -431,20 +431,21 @@ void GameState::spawnMysteryShipWithIntervals(const float &dt)
 	}
 }
 
-GameState::GameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, MusicResource *musicResource, HighScoreManager *highScoreManager)
-	: State(window, supportedKeys, states), musicResource(musicResource), highScoreManager(highScoreManager)
+GameState::GameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, MusicResource *musicResource, HighScoreManager *highScoreManager, User *user)
+	: State(window, supportedKeys, states), musicResource(musicResource), highScoreManager(highScoreManager), user(user)
 {
 	std::srand(static_cast<unsigned>(std::time(nullptr)));
 	initVariables();
+	std::thread textureLoader(initTextures, this, std::ref(textures));
 	initBackground();
 	initFonts();
 	initKeybinds();
-	initTextures();
 	initPauseMenu();
 	initGameOverMenu();
-	initMysteryShip();
-	initPlayers();
 	initObstacles();
+	initMysteryShip();
+	textureLoader.join();
+	initPlayers();
 	createAliens();
 	initTexts();
 }

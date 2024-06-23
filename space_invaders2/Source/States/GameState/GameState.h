@@ -2,6 +2,8 @@
 #define GAMESTATE_H
 
 #include <algorithm>
+#include <thread>
+
 #include "State.h"
 #include "Obstacle.h"
 #include "Alien.h"
@@ -11,6 +13,7 @@
 #include "PauseMenu.h"
 #include "GameOverMenu.h"
 #include "MusicResource.h"
+#include "User.h"
 
 class GameState : public State
 {
@@ -19,6 +22,7 @@ private:
 	PauseMenu *pauseMenu;
 	GameOverMenu *gameOverMenu;
 	MusicResource *musicResource;
+	User *user;
 
 	Player *player;
 	Laser *laser;
@@ -45,7 +49,7 @@ private:
 	void initBackground();
 	void initFonts();
 	void initKeybinds();
-	void initTextures();
+	void initTextures(std::map<std::string, sf::Texture>&textures);
 	void initPauseMenu();
 	void initGameOverMenu();
 	void initPlayers();
@@ -80,7 +84,7 @@ private:
 	float timeLastSpawn;
 
 public:
-	GameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, MusicResource *musicResource, HighScoreManager *highScoreManager);
+	GameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, MusicResource *musicResource, HighScoreManager *highScoreManager, User *user);
 	virtual ~GameState();
 
 	// Functions

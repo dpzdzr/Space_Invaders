@@ -2,6 +2,7 @@
 #define HIGHSCORESTATE_H
 
 #include <filesystem>
+#include <ranges>
 
 #include "GameState.h"
 #include "Button.h"

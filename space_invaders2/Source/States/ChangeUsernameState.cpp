@@ -1,10 +1,10 @@
-#include "SettingsState.h"
+#include "ChangeUsernameState.h"
 
-void SettingsState::initVariables()
+void ChangeUsernameState::initVariables()
 {
 }
 
-void SettingsState::initBackground()
+void ChangeUsernameState::initBackground()
 {
     background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
 
@@ -16,7 +16,7 @@ void SettingsState::initBackground()
     background.setTexture(&backgroundTexture);
 }
 
-void SettingsState::initFonts()
+void ChangeUsernameState::initFonts()
 {
     if (!font.loadFromFile(RESOURCES "Fonts/Pixelon.TTF"))
     {
@@ -24,16 +24,16 @@ void SettingsState::initFonts()
     }
 }
 
-void SettingsState::initTitleText()
+void ChangeUsernameState::initTitleText()
 {
     titleText.setFont(font);
-    titleText.setString("Settings");
+    titleText.setString("Change username");
     titleText.setCharacterSize(70);
     titleText.setFillColor(sf::Color::White);
     titleText.setPosition(window->getSize().x / 2.f - titleText.getGlobalBounds().width / 2.f, window->getSize().y * 0.08f);
 }
 
-void SettingsState::initKeybinds()
+void ChangeUsernameState::initKeybinds()
 {
     std::ifstream ifs(RESOURCES "Config/SettingsStates_keybinds.ini");
 
@@ -50,7 +50,7 @@ void SettingsState::initKeybinds()
     ifs.close();
 }
 
-void SettingsState::initButtons()
+void ChangeUsernameState::initButtons()
 {
     float windowWidth = window->getSize().x;
     float windowHeight = window->getSize().y;
@@ -63,8 +63,6 @@ void SettingsState::initButtons()
     float spacesBetweenButtons = windowHeight * 0.1f;
 
     std::vector<std::pair<std::string, std::string>> buttonNames = {
-        {"MUSIC_STATUS", musicResource->isMusicPaused() ? "Music: off" : "Music: on"},
-        {"SOUNDS_STATUS", musicResource->isSoundOn() ? "Sounds: on" : "Sounds: off"},
         {"CHANGE_USERNAME", "Change playername"},
         {"EXIT_STATE", "Quit"}};
 
@@ -77,8 +75,8 @@ void SettingsState::initButtons()
     }
 }
 
-SettingsState::SettingsState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, MusicResource *musicResource, User *user)
-    : State(window, supportedKeys, states), musicResource(musicResource), user(user)
+ChangeUsernameState::ChangeUsernameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, User *user)
+    : State(window, supportedKeys, states), user(user)
 {
     initVariables();
     initBackground();
@@ -88,7 +86,7 @@ SettingsState::SettingsState(sf::RenderWindow *window, std::map<std::string, int
     initButtons();
 }
 
-SettingsState::~SettingsState()
+ChangeUsernameState::~ChangeUsernameState()
 {
     for (auto it = buttons.begin(); it != buttons.end(); ++it)
     {
@@ -99,11 +97,11 @@ SettingsState::~SettingsState()
 // Accessors
 
 // Functions
-void SettingsState::updateInput(const float &dt)
+void ChangeUsernameState::updateInput(const float &dt)
 {
 }
 
-void SettingsState::updateButtons()
+void ChangeUsernameState::updateButtons()
 {
     /*Updates all the buttons in the state and handles their functionality*/
     for (auto &it : buttons)
@@ -116,46 +114,16 @@ void SettingsState::updateButtons()
     {
         endState();
     }
-    else if (buttons["MUSIC_STATUS"]->isClicked())
-    {
-        if (musicResource->isMusicPaused() == true)
-        {
-            buttons["MUSIC_STATUS"]->changeText("Music: on");
-            musicResource->playMusic();
-        }
-        else
-        {
-            buttons["MUSIC_STATUS"]->changeText("Music: off");
-            musicResource->stopMusic();
-        }
-    }
-    else if (buttons["SOUNDS_STATUS"]->isClicked())
-    {
-        if (musicResource->isSoundOn() == true)
-        {
-            buttons["SOUNDS_STATUS"]->changeText("Sound: off");
-            musicResource->stopSound();
-        }
-        else
-        {
-            buttons["SOUNDS_STATUS"]->changeText("Sound: on");
-            musicResource->playSound();
-        }
-    }
-    else if(buttons["CHANGE_USERNAME"]->isClicked())
-    {
-        states->push(new ChangeUsernameState(window, supportedKeys, states, user));
-    }
 }
 
-void SettingsState::update(const float &dt)
+void ChangeUsernameState::update(const float &dt)
 {
     updateMousePositions();
     updateInput(dt);
     updateButtons();
 }
 
-void SettingsState::renderButtons(sf::RenderTarget *target)
+void ChangeUsernameState::renderButtons(sf::RenderTarget *target)
 {
     for (auto &it : buttons)
     {
@@ -163,7 +131,7 @@ void SettingsState::renderButtons(sf::RenderTarget *target)
     }
 }
 
-void SettingsState::render(sf::RenderTarget *target)
+void ChangeUsernameState::render(sf::RenderTarget *target)
 {
     if (!target)
         target = window;

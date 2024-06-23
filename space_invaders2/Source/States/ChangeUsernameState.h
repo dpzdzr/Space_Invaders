@@ -1,13 +1,11 @@
-#ifndef SETTINGSSTATE_H
-#define SETTINGSSTATE_H
+#ifndef CHANGEUSERNAMESTATE_H
+#define CHANGEUSERNAMESTATE_H
 
 #include "State.h"
-#include "Button.h"
-#include "MusicResource.h"
 #include "User.h"
-#include "ChangeUsernameState.h"
+#include "Button.h"
 
-class SettingsState : public State
+class ChangeUsernameState : public State
 {
 private:
     // Variables
@@ -16,9 +14,6 @@ private:
     sf::Font font;
     sf::Text titleText;
     User *user;
-
-    // Music
-    MusicResource *musicResource;
 
     std::map<std::string, Button *> buttons;
 
@@ -31,8 +26,8 @@ private:
     void initButtons();
 
 public:
-    SettingsState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, MusicResource *musicResource, User *user);
-    virtual ~SettingsState();
+    ChangeUsernameState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, User *user);
+    virtual ~ChangeUsernameState();
     // Accessors
 
     // Functions

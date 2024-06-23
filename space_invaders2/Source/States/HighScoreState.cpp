@@ -93,7 +93,10 @@ void HighScoreState::initHighScoreText()
 	std::stringstream ssUsername;
 	std::stringstream ssScore;
 
-	for (auto &score : highScoreManager->getHighScores())
+	auto highScores = highScoreManager->getHighScores();
+	auto topScores = highScores | std::views::take(7);
+
+	for (auto &score : topScores)
 	{
 		ssUsername << score.userName << std::endl;
 		ssScore << score.score << "\n";

@@ -93,6 +93,7 @@ void MainMenuState::initHighScoreManager()
 void MainMenuState::initUser()
 {
 	user = new User();
+	user->setUsername("Player");
 }
 
 MainMenuState::MainMenuState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states)
@@ -136,7 +137,7 @@ void MainMenuState::updateButtons()
 	// New game
 	if (buttons["GAME_STATE"]->isClicked())
 	{
-		states->push(new GameState(window, supportedKeys, states, musicResource, highScoreManager));
+		states->push(new GameState(window, supportedKeys, states, musicResource, highScoreManager, user));
 	}
 
 	if (buttons["HIGH_SCORE_STATE"]->isClicked())
@@ -146,7 +147,7 @@ void MainMenuState::updateButtons()
 
 	if (buttons["SETTINGS_STATE"]->isClicked())
 	{
-		states->push(new SettingsState(window, supportedKeys, states, musicResource));
+		states->push(new SettingsState(window, supportedKeys, states, musicResource, user));
 	}
 
 	if (buttons["HOW_TO_PLAY_STATE"]->isClicked())
