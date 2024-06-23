@@ -99,6 +99,11 @@ void Game::updateSFMLEvents()
 		case sf::Event::Closed:
 			window->close();
 			break;
+		case ::sf::Event::TextEntered:
+			EventListener *listener = dynamic_cast<EventListener *>(states.top());
+			if (listener)
+				listener->handleEvent(sfmlEvent);
+			break;
 		}
 	}
 }

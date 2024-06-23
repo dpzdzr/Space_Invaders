@@ -65,7 +65,7 @@ void SettingsState::initButtons()
     std::vector<std::pair<std::string, std::string>> buttonNames = {
         {"MUSIC_STATUS", musicResource->isMusicPaused() ? "Music: off" : "Music: on"},
         {"SOUNDS_STATUS", musicResource->isSoundOn() ? "Sounds: on" : "Sounds: off"},
-        {"CHANGE_USERNAME", "Change playername"},
+        {"CHANGE_USERNAME", "Change username"},
         {"EXIT_STATE", "Quit"}};
 
     for (auto &buttonName : buttonNames)
@@ -142,7 +142,7 @@ void SettingsState::updateButtons()
             musicResource->playSound();
         }
     }
-    else if(buttons["CHANGE_USERNAME"]->isClicked())
+    else if (buttons["CHANGE_USERNAME"]->isClicked())
     {
         states->push(new ChangeUsernameState(window, supportedKeys, states, user));
     }

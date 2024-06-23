@@ -2,6 +2,8 @@
 #define GAME_H
 
 #include "MainMenuState.h"
+#include "EventListener.h"
+
 #include "SFML/Audio.hpp"
 
 class Game
