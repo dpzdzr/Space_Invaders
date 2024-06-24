@@ -43,13 +43,13 @@ private:
 
 	// Functions
 	void nextLevel();
-	void reinitGame();
+	void resetGameForNextLevel();
 	void resetGame();
 	void initVariables();
 	void initBackground();
 	void initFonts();
 	void initKeybinds();
-	void initTextures(std::map<std::string, sf::Texture>&textures);
+	void initTextures(std::map<std::string, sf::Texture> &textures);
 	void initPauseMenu();
 	void initGameOverMenu();
 	void initPlayers();

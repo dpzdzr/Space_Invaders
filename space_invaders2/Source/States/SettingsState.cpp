@@ -8,7 +8,7 @@ void SettingsState::initBackground()
 {
     background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
 
-    if (!backgroundTexture.loadFromFile(RESOURCES "Images/Backgrounds/tlo.png"))
+    if (!backgroundTexture.loadFromFile(RESOURCES "Images/Backgrounds/settings_menu.png"))
     {
         throw "ERORR::MAINMENU::TEXTURE";
     }

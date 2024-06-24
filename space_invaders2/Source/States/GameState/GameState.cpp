@@ -4,20 +4,22 @@ void GameState::nextLevel()
 {
 	++level;
 	levelText.setString("Level: " + std::to_string(level));
-	resetGame();
-	reinitGame();
+	resetGameForNextLevel();
 }
 
 void GameState::gameOver()
 {
-	std::cout << "Game over!\n";
 	highScoreManager->addScore(user->getUsername(), score);
 	gameOverFlag = true;
 }
 
-void GameState::reinitGame()
+void GameState::resetGameForNextLevel()
 {
-	initVariables();
+	obstacles.clear();
+	deleteAliens();
+	aliens.clear();
+	alienLasers.clear();
+	mysteryShip->reset();
 	initObstacles();
 	createAliens();
 }
@@ -30,6 +32,9 @@ void GameState::resetGame()
 	alienLasers.clear();
 	player->resetPlayer();
 	mysteryShip->reset();
+	initVariables();
+	initObstacles();
+	createAliens();
 	livesText.setString("Lives: " + std::to_string(player->getLives()));
 	score = 0;
 	formatScoreText();
@@ -82,11 +87,11 @@ void GameState::initFonts()
 {
 	if (!font.loadFromFile(RESOURCES "Fonts/Pixelon.ttf"))
 	{
-		throw("ERROR::MAINMENUSTATES::COULT NOT LOAD FILE");
+		throw("ERROR::MAINMENUSTATES::COULD NOT LOAD FILE");
 	}
 }
 
-void GameState::initTextures(std::map<std::string, sf::Texture>&textures)
+void GameState::initTextures(std::map<std::string, sf::Texture> &textures)
 {
 	textures["PLAYER_IDLE"].loadFromFile(RESOURCES "Images/Sprites/Player/test.png");
 	textures["ALIEN_1"].loadFromFile(RESOURCES "Images/Sprites/Aliens/alien_1.png");
@@ -251,7 +256,6 @@ void GameState::updatePauseMenuButtons()
 	else if (pauseMenu->isButtonPressed("RESTART"))
 	{
 		resetGame();
-		reinitGame();
 		unpauseState();
 	}
 }
@@ -261,7 +265,6 @@ void GameState::updateGameOverMenuButtons()
 	if (gameOverMenu->isButtonPressed("RETRY"))
 	{
 		resetGame();
-		reinitGame();
 	}
 	else if (gameOverMenu->isButtonPressed("QUIT"))
 	{

@@ -50,11 +50,9 @@ void MysteryShip::update(sf::RenderTarget *target, const float &dt)
             move(dt, 1, 0);
         else
             move(dt, -1, 0);
+
         if (getPosition().x > target->getSize().x || getPosition().x < -sprite.getGlobalBounds().width)
-        {
             alive = false;
-            std::cout << "MysteryShip inactive";
-        }
     }
 }
 

@@ -9,7 +9,7 @@ void HighScoreState::initBackground()
 {
 	background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
 
-	if (!backgroundTexture.loadFromFile(RESOURCES "Images/Backgrounds/tlo.png"))
+	if (!backgroundTexture.loadFromFile(RESOURCES "Images/Backgrounds/high_score_menu.png"))
 	{
 		throw "ERORR::MAINMENU::TEXTURE";
 	}
@@ -70,8 +70,8 @@ void HighScoreState::initButtons()
 	for (auto &buttonName : buttonNames)
 	{
 		buttons[buttonName.first] = new Button(buttonX, buttonY, buttonWidth, buttonHeight,
-										   &font, buttonName.second,
-										   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+											   &font, buttonName.second,
+											   sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 		buttonY += spacesBetweenButtons;
 	}
 }
@@ -106,8 +106,6 @@ void HighScoreState::initHighScoreText()
 	scoreText.setString(ssScore.str());
 }
 
-
-
 HighScoreState::HighScoreState(sf::RenderWindow *window, std::map<std::string, int> *supportedKeys, std::stack<State *> *states, HighScoreManager *highScoreManager)
 	: State(window, supportedKeys, states), highScoreManager(highScoreManager)
 {
@@ -141,7 +139,7 @@ void HighScoreState::updateButtons()
 	}
 
 	// Quit game
-	if(buttons["CLEAR_HIGHSCORE"]->isClicked())
+	if (buttons["CLEAR_HIGHSCORE"]->isClicked())
 	{
 		highScoreManager->clearHighScoreFile();
 		initHighScoreText();
@@ -150,7 +148,6 @@ void HighScoreState::updateButtons()
 	{
 		endState();
 	}
-
 }
 
 void HighScoreState::update(const float &dt)
