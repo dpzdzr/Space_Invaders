@@ -214,13 +214,13 @@ void ChangeUsernameState::render(sf::RenderTarget *target)
     target->draw(errorText);
     renderButtons(target);
 
-    // Remove later
-    sf::Text mouseText;
-    mouseText.setPosition(mousePosView.x, mousePosView.y - 50);
-    mouseText.setFont(font);
-    mouseText.setCharacterSize(12);
-    std::stringstream ss;
-    ss << mousePosView.x << ' ' << mousePosView.y;
-    mouseText.setString(ss.str());
-    target->draw(mouseText);
+    // // Remove later
+    // sf::Text mouseText;
+    // mouseText.setPosition(mousePosView.x, mousePosView.y - 50);
+    // mouseText.setFont(font);
+    // mouseText.setCharacterSize(12);
+    // std::stringstream ss;
+    // ss << mousePosView.x << ' ' << mousePosView.y;
+    // mouseText.setString(ss.str());
+    // target->draw(mouseText);
 }
